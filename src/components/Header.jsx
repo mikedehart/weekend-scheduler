@@ -8,7 +8,6 @@ const Header = () => {
 	return (
 		<div>
 			<h1>Weekend Scheduler</h1>
-			<Button />
 		</div>
 	);
 };

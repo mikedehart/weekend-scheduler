@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Header from './Header.jsx';
 import Nav from './Nav.jsx';
 import InfoPanel from './InfoPanel.jsx';
-import Table from './Table.jsx';
+import MainTable from './MainTable.jsx';
+import TopNav from './TopNav.jsx';
 
 
 class AppContainer extends Component {
@@ -21,11 +22,11 @@ class AppContainer extends Component {
 		return(
 			<div className="container">
 				<div className="row">
-					<Header />
+					<TopNav />
 				</div>
 				<div className="row">
 					<Nav />
-					<Table />
+					<MainTable />
 				</div>
 				
 			</div>
