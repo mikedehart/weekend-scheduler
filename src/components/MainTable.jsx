@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Table } from 'react-bootstrap';
+import '../scss/table.scss';
 
 
 
@@ -25,6 +26,12 @@ const rowInstance = (
 );
 
 
+const UserItem = (name) => {
+	return (
+		<td>{name}</td>
+	);
+};
+
 class MainTable extends Component {
 	// Used to set initial state
 	constructor(props) {
@@ -33,37 +40,36 @@ class MainTable extends Component {
 
 	render() {
 		return(
-			<div className="col-lg-9">
-				<Table striped bordered condensed hover>
+				<Table striped bordered condensed>
 				  <thead>
 				    <tr>
-				      <th>#</th>
-				      <th>First Name</th>
-				      <th>Last Name</th>
-				      <th>Username</th>
+				      <th>Date</th>
+				      <th>Day</th>
+				      <th>Shift One</th>
+				      <th>Shift Two</th>
 				    </tr>
 				  </thead>
 				  <tbody>
 				    <tr>
-				      <td>1</td>
-				      <td>Mark</td>
-				      <td>Otto</td>
-				      <td>@mdo</td>
+				      <td>1/6/2018</td>
+				      <td>Sat</td>
+				      <td>mbartrum</td>
+				      <td>jdever</td>
 				    </tr>
 				    <tr>
-				      <td>2</td>
-				      <td>Jacob</td>
-				      <td>Thornton</td>
-				      <td>@fat</td>
+				      <td>1/7/2018</td>
+				      <td>Sun</td>
+				      <td>dedicg</td>
+				      <td>vwolffe</td>
 				    </tr>
 				    <tr>
-				      <td>3</td>
-				      <td colSpan="2">Larry the Bird</td>
-				      <td>@twitter</td>
+				    	<td></td>
+				    	<td></td>
+				    	<UserItem name="jdever" />
+				    	<UserItem name="mdehart" />
 				    </tr>
 				  </tbody>
 				</Table>
-			</div>
 		);
 	}
 }

@@ -5,6 +5,7 @@ import Nav from './Nav.jsx';
 import InfoPanel from './InfoPanel.jsx';
 import MainTable from './MainTable.jsx';
 import TopNav from './TopNav.jsx';
+import ErrorAlert from './ErrorAlert.jsx';
 
 
 class AppContainer extends Component {
@@ -13,7 +14,7 @@ class AppContainer extends Component {
 		super(props);
 		this.state = {
 			title: this.props.title,
-			val1: 0
+			user: this.props.user
 		}
 
 	}
@@ -22,11 +23,18 @@ class AppContainer extends Component {
 		return(
 			<div className="container">
 				<div className="row">
-					<TopNav />
+					<TopNav user={this.props.user} />
 				</div>
 				<div className="row">
-					<Nav />
-					<MainTable />
+					<ErrorAlert />
+				</div>
+				<div className="row">
+					<div className="col-lg-2 col-md-2">
+						<Nav />
+					</div>
+					<div className="col-lg-10 col-md-10">
+						<MainTable />
+					</div>
 				</div>
 				
 			</div>
@@ -35,7 +43,8 @@ class AppContainer extends Component {
 }
 
 AppContainer.propTypes = {
-	title: PropTypes.string.isRequired
+	title: PropTypes.string.isRequired,
+	user: PropTypes.string.isRequired
 };
 
 export default AppContainer;
