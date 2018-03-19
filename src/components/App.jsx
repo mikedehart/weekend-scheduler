@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Header from './Header.jsx';
+import Nav from './Nav.jsx';
+import InfoPanel from './InfoPanel.jsx';
+import Table from './Table.jsx';
 
 
 class AppContainer extends Component {
@@ -15,8 +19,15 @@ class AppContainer extends Component {
 
 	render() {
 		return(
-			<div>
-				<h1>{this.props.title}</h1>
+			<div className="container">
+				<div className="row">
+					<Header />
+				</div>
+				<div className="row">
+					<Nav />
+					<Table />
+				</div>
+				
 			</div>
 			);
 	}
