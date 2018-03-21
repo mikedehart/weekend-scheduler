@@ -6,6 +6,7 @@ import InfoPanel from './InfoPanel';
 import MainTable from './MainTable';
 import TopNav from './TopNav';
 import ErrorAlert from './ErrorAlert';
+import ModalStruct from './ModalStruct';
 
 
 class AppContainer extends Component {
@@ -19,8 +20,25 @@ class AppContainer extends Component {
 
 	}
 
+	toggleModal = (e) => {
+		e.preventDefault();
+	};
+
 	render() {
 		const testVals = [
+	{
+		id: 1222018,
+		date: '1/22/2018',
+		day: 'Sat',
+		users: [{
+				name: 'bchin',
+				id: 'bchin'
+			},
+			{
+				name: 'jting',
+				id: 'jting'
+			}]
+	},
 	{
 		id: 1232018,
 		date: '1/23/2018',
@@ -49,6 +67,7 @@ class AppContainer extends Component {
 	}];
 		return(
 			<div className="container">
+				<ModalStruct />
 				<div className="row">
 					<TopNav user={this.props.user} />
 				</div>

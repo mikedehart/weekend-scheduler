@@ -15,7 +15,7 @@ const TableRow = (props) =>
 	  					key={user.id}
   					/>
 					)}
-  			</tr>
+  			</tr>;
 
 
 TableRow.propTypes = {

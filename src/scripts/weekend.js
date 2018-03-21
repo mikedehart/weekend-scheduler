@@ -20,8 +20,8 @@
 */
 
 function getWeekendsinMonth(month, year) {
-	let _year = parseInt(year);
-	let _month = parseInt(month);
+	let _year = parseInt(year, 10);
+	let _month = parseInt(month, 10);
 	let currentMonth = _month;
 	let initialDate = new Date(_year, _month, 1);
 	let weekends = [];
