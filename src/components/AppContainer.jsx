@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Header from './Header.jsx';
-import Nav from './Nav.jsx';
-import InfoPanel from './InfoPanel.jsx';
-import MainTable from './MainTable.jsx';
-import TopNav from './TopNav.jsx';
-import ErrorAlert from './ErrorAlert.jsx';
+import Header from './Header';
+import SideNav from './SideNav';
+import InfoPanel from './InfoPanel';
+import MainTable from './MainTable';
+import TopNav from './TopNav';
+import ErrorAlert from './ErrorAlert';
 
 
 class AppContainer extends Component {
@@ -20,6 +20,33 @@ class AppContainer extends Component {
 	}
 
 	render() {
+		const testVals = [
+	{
+		id: 1232018,
+		date: '1/23/2018',
+		day: 'Sat',
+		users: [{
+				name: 'mbartrum',
+				id: 'mbartrum'
+			},
+			{
+				name: 'mdehart',
+				id: 'mdehart'
+			}]
+	},
+	{
+		id: 1242018,
+		date: '1/24/2018',
+		day: 'Sun',
+		users: [{
+				name: 'dwhite',
+				id: 'dwhite'
+			},
+			{
+				name: 'jdever',
+				id: 'jdever'
+			}]
+	}];
 		return(
 			<div className="container">
 				<div className="row">
@@ -30,10 +57,10 @@ class AppContainer extends Component {
 				</div>
 				<div className="row">
 					<div className="col-lg-2 col-md-2">
-						<Nav />
+						<SideNav />
 					</div>
 					<div className="col-lg-10 col-md-10">
-						<MainTable />
+						<MainTable dates={testVals} />
 					</div>
 				</div>
 				

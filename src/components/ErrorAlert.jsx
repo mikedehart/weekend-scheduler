@@ -46,9 +46,16 @@ class ErrorAlert extends React.Component {
 					</p>
 				</Alert>
 			);
+		} else {
+			//Used for testing. Remove later
+			//return <Button onClick={this.handleShow}>Show Alert</Button>
+			return (
+				<div className="row">
+					<div className="alert-margin"></div>
+				</div>
+			);
 		}
-		//Used for testing. Remove later
-		return <Button onClick={this.handleShow}>Show Alert</Button>
+		
 	}
 }
 

@@ -2,8 +2,8 @@ body {
 	/* background-color: blue; */
 }
 
-.container {
-	
+.root {
+	background-color: grey;
 }
 
 .s-row {
@@ -16,6 +16,15 @@ body {
 
 }
 
+/********
+Alert styles
+********/
+
+.alert-margin {
+	margin-bottom: 20px;
+}
+
+
 
 /*******
 Changes to bootstrap
@@ -23,4 +32,8 @@ Changes to bootstrap
 
 .navbar {
 	margin-bottom: 0;
+}
+
+a.list-group-item {
+	text-align: center;
 }
