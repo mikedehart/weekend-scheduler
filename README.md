@@ -4,8 +4,12 @@ Weekend Scheduler
 Author: Mike DeHart
 
 - Internal tool used to schedule weekend shifts
-
-- Converting from C# to React
+- Covers:
+	- Admin panel to add/remove users
+	- Sign up for shifts with single click
+	- Tracking for user shifts and alt days
+	- Scheduling of alt days
+	- Ability to switch shifts (?)
 
 Installation:
 

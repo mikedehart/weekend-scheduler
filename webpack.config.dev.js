@@ -40,7 +40,8 @@ const config = {
          loader: "babel-loader",
          options: {
            cacheDirectory: true,
-           presets: ['react', 'env'] // Transpiles JSX and ES6
+           presets: ['react', 'env'], // Transpiles JSX and ES6
+           plugins: ['transform-class-properties']
          }
        }]
      }
