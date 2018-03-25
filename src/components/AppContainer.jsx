@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { BrowserRouter, Route } from 'react-router-dom';
+
+
+
 import Header from './Header';
 import SideNav from './SideNav';
 import InfoPanel from './InfoPanel';
@@ -20,9 +24,7 @@ class AppContainer extends Component {
 
 	}
 
-	toggleModal = (e) => {
-		e.preventDefault();
-	};
+	// TODO: Implement routes (route for modalstruct?)
 
 	render() {
 		const testVals = [
@@ -82,9 +84,8 @@ class AppContainer extends Component {
 						<MainTable dates={testVals} />
 					</div>
 				</div>
-				
 			</div>
-			);
+		);
 	}
 }
 

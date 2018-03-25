@@ -21,6 +21,7 @@
     "prop-types": "^15.6.1",
     "react-bootstrap": "^0.32.1",
     "react-hot-loader": "^4.0.0",
+    "react-redux": "^5.0.7",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "uglifyjs-webpack-plugin": "^1.2.3",
