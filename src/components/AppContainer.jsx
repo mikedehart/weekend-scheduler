@@ -81,7 +81,7 @@ class AppContainer extends Component {
 					<div className="row">
 						<div className="col-lg-2 col-md-2">
 							<div className="list-group">
-						        <NavLink to="/ase" className="list-group-item active">ASE</NavLink>
+						        <NavLink to="/ase" className="list-group-item">ASE</NavLink>
 						        <NavLink to="/iq" className="list-group-item">IQ</NavLink>
 						        <NavLink to="/rep" className="list-group-item">REP</NavLink>
 					  		</div>
