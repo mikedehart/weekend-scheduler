@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 class TopNav extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state
+		this.state;
 	}
 
 	render() {

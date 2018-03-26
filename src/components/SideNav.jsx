@@ -1,23 +1,16 @@
 import React from 'react';
 import '../scss/main.scss';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { NavLink, BrowserRouter } from 'react-router-dom';
 
-const Nav = ({match}) => {
+const Nav = () => {
 	return (
 		<BrowserRouter>
 			<div className="list-group">
-		        <NavLink to="#" className="list-group-item active">Calendar</NavLink>
-		        <NavLink to="#" className="list-group-item">Alt. Days</NavLink>
-		        <NavLink to="#" className="list-group-item">Switch Shifts</NavLink>
-
-
-		        <Switch>
-		        	<Route path="/ase" render={() => <MainTable />} />
-			        <Route path="/iq" render={() => <MainTable />} />
-			        <Route path="/rep" render={() => <MainTable />} />
-		        </Switch>
+		        <NavLink to="/ase" className="list-group-item active">ASE</NavLink>
+		        <NavLink to="/iq" className="list-group-item">IQ</NavLink>
+		        <NavLink to="/rep" className="list-group-item">REP</NavLink>
 		  	</div>
-	  	</BrowserRouter>	
+	  	</BrowserRouter>
 	);
 };
 

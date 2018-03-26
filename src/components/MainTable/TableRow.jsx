@@ -11,8 +11,8 @@ const TableRow = (props) =>
 				<td>{props.day}</td>
 	  			{props.users.map((user, index) =>
 	  				<TableCell 
-	  					name={user.name}
-	  					key={user.id}
+	  					name={user}
+	  					key={user}
   					/>
 					)}
   			</tr>;

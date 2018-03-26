@@ -7,7 +7,7 @@ import TableRow from './TableRow';
 
 const TableBody = (props) =>
 	<tbody>
-	{props.dates.map((date, index) =>
+	{props.dates.map((date) =>
 		<TableRow
 			key={date.id}
 			date={date.date}

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Switch, BrowserRouter, Route, NavLink } from 'react-router-dom';
 
+import {aseVals, iqVals, repVals} from '../data/schedule.js';
 
 
 import Header from './Header';
@@ -76,14 +77,27 @@ class AppContainer extends Component {
 				<div className="row">
 					<ErrorAlert />
 				</div>
-				<div className="row">
-					<div className="col-lg-2 col-md-2">
-						<SideNav />
+				<BrowserRouter>
+					<div className="row">
+						<div className="col-lg-2 col-md-2">
+							<div className="list-group">
+						        <NavLink to="/ase" className="list-group-item active">ASE</NavLink>
+						        <NavLink to="/iq" className="list-group-item">IQ</NavLink>
+						        <NavLink to="/rep" className="list-group-item">REP</NavLink>
+					  		</div>
+						</div>
+						<div className="col-lg-10 col-md-10">
+							<div className="col-lg-10 col-md-10">
+								<Switch>
+									<Route exact path="/" render={() => <MainTable dates={aseVals} />} />
+									<Route path="/ase" render={() => <MainTable dates={aseVals} />} />
+									<Route path="/iq" render={() => <MainTable dates={iqVals} />} />
+									<Route path="/rep" render={() => <MainTable dates={repVals} />} />
+								</Switch>
+							</div>
+						</div>
 					</div>
-					<div className="col-lg-10 col-md-10">
-						<MainTable dates={testVals} />
-					</div>
-				</div>
+				</BrowserRouter>
 			</div>
 		);
 	}
