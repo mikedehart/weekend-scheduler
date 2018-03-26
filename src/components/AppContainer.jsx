@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, BrowserRouter, Route, NavLink } from 'react-router-dom';
+import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import {aseVals, iqVals, repVals} from '../data/schedule.js';
 
@@ -28,47 +28,8 @@ class AppContainer extends Component {
 	// TODO: Implement routes (route for modalstruct?)
 
 	render() {
-		const testVals = [
-	{
-		id: 1222018,
-		date: '1/22/2018',
-		day: 'Sat',
-		users: [{
-				name: 'bchin',
-				id: 'bchin'
-			},
-			{
-				name: 'jting',
-				id: 'jting'
-			}]
-	},
-	{
-		id: 1232018,
-		date: '1/23/2018',
-		day: 'Sat',
-		users: [{
-				name: 'mbartrum',
-				id: 'mbartrum'
-			},
-			{
-				name: 'mdehart',
-				id: 'mdehart'
-			}]
-	},
-	{
-		id: 1242018,
-		date: '1/24/2018',
-		day: 'Sun',
-		users: [{
-				name: 'dwhite',
-				id: 'dwhite'
-			},
-			{
-				name: 'jdever',
-				id: 'jdever'
-			}]
-	}];
 		return(
+		<BrowserRouter>
 			<div className="container">
 				<ModalStruct />
 				<div className="row">
@@ -77,28 +38,23 @@ class AppContainer extends Component {
 				<div className="row">
 					<ErrorAlert />
 				</div>
-				<BrowserRouter>
-					<div className="row">
-						<div className="col-lg-2 col-md-2">
-							<div className="list-group">
-						        <NavLink to="/ase" className="list-group-item">ASE</NavLink>
-						        <NavLink to="/iq" className="list-group-item">IQ</NavLink>
-						        <NavLink to="/rep" className="list-group-item">REP</NavLink>
-					  		</div>
-						</div>
+				<div className="row">
+					<div className="col-lg-2 col-md-2">
+						<SideNav />
+					</div>
+					<div className="col-lg-10 col-md-10">
 						<div className="col-lg-10 col-md-10">
-							<div className="col-lg-10 col-md-10">
-								<Switch>
-									<Route exact path="/" render={() => <MainTable dates={aseVals} />} />
-									<Route path="/ase" render={() => <MainTable dates={aseVals} />} />
-									<Route path="/iq" render={() => <MainTable dates={iqVals} />} />
-									<Route path="/rep" render={() => <MainTable dates={repVals} />} />
-								</Switch>
-							</div>
+							<Switch>
+								<Route exact path="/" render={() => <Redirect to="/ase" />} />
+								<Route path="/ase" render={() => <MainTable dates={aseVals} />} />
+								<Route path="/iq" render={() => <MainTable dates={iqVals} />} />
+								<Route path="/rep" render={() => <MainTable dates={repVals} />} />
+							</Switch>
 						</div>
 					</div>
-				</BrowserRouter>
+				</div>
 			</div>
+		</BrowserRouter>
 		);
 	}
 }

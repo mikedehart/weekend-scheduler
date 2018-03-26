@@ -55,5 +55,5 @@ export const aseVals = [
 		id: 81242018,
 		date: '1/24/2018',
 		day: 'Sun',
-		users: ['repmom', 'repmom']
+		users: ['repdaughter', 'repmom']
 	}];
