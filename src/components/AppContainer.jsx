@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import {aseVals, iqVals, repVals} from '../data/schedule.js';
+import { testUser } from '../data/users.js';
 
 
 import Header from './Header';
