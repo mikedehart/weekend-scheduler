@@ -10,25 +10,42 @@ body {
 	background-color: green;
 }
 
+/************************
+Top Nav
+*************************/
 
-.topnav-user {
-	font-weight: bold;
-
+.user_btn {
+	float: right!important;
+	margin-right: -15px;
+	margin-top: 15px;
+	margin-bottom: 0;
 }
 
-/********
+/************************
+Modal
+*************************/
+
+p.newuser_msg {
+	padding-bottom: 10px;
+}
+
+.inum_disabled {
+	background-color: lightgrey;
+}
+
+
+/************************
 Alert styles
-********/
+************************/
 
 .alert-margin {
 	margin-bottom: 20px;
 }
 
 
-
-/*******
+/***********************
 Changes to bootstrap
-*********/
+*************************/
 
 .navbar {
 	margin-bottom: 0;
@@ -36,4 +53,8 @@ Changes to bootstrap
 
 a.list-group-item {
 	text-align: center;
+}
+
+p.navbar-text.navbar-right {
+	margin-bottom: 0;
 }

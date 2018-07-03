@@ -33,6 +33,4 @@ function getWeekendsinMonth(month, year) {
 		initialDate.setDate(initialDate.getDate() + 1);
 	}
 	return weekends;
-}
-
-
+};

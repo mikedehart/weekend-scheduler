@@ -41,7 +41,7 @@ const config = {
          options: {
            cacheDirectory: true,
            presets: ['react', 'env'], // Transpiles JSX and ES6
-           plugins: ['transform-class-properties']
+           plugins: ['transform-class-properties', 'transform-object-rest-spread', 'transform-es2015-destructuring']
          }
        }]
      }
