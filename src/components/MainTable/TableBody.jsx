@@ -9,7 +9,7 @@ const TableBody = (props) =>
 	<tbody>
 	{props.dates.map((date) =>
 		<TableRow
-			key={date.id}
+			key={date._id}
 			date={date.date}
 			day={date.day}
 			users={date.users}

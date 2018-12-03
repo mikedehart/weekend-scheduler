@@ -13,7 +13,8 @@ const ModalHeader = (props) => {
 
 ModalHeader.propTypes = {
 	authenticated: PropTypes.bool.isRequired,
-	username: PropTypes.string
+	username: PropTypes.string.isRequired,
+	
 };
 
 export default ModalHeader;

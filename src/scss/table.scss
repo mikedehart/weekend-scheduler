@@ -2,6 +2,10 @@ Table {
 	text-align: center;
 }
 
+.qtr_nav, .qtr_header {
+	text-align: center;
+}
+
 th {
 	text-align: center;
 	background-image: linear-gradient(to bottom,#337ab7 0,#2b669a 100%);
@@ -12,6 +16,14 @@ th {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.free_cell {
+	background-color: green;
+}
+
 .userSelected {
 	background-color: red;
+}
+
+.product_header {
+	text-align: center;
 }

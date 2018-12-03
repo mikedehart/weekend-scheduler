@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TableCell = (props) =>
-	<td>
-		{props.name}
-	</td>;
+const TableCell = (props) => (
+	<td>{props.name}</td>
+);
 
-TableCell.propTypes = {
-	name: PropTypes.string
-}
+// TableCell.propTypes = {
+// 	name: PropTypes.obj
+// }
 
 export default TableCell;

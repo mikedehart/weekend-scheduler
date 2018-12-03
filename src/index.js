@@ -30,8 +30,9 @@ if (auth.checkToken()) {
 	if(!inum) {
 		window.location.replace(`${config.api.server}/auth/signin`);
 	} else {
+		// Product is required by MainTable. Defaulting to ASE for now.
 		ReactDOM.render(<AppContainer  
-			authenticated={false} inum={inum} />, document.getElementById('root'));
+			authenticated={false} inum={inum} product="ASE" />, document.getElementById('root'));
 	}
 
 }
