@@ -16,8 +16,9 @@ th {
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-.free_cell {
+td.free_cell {
 	background-color: green;
+	color: green;
 }
 
 .userSelected {
@@ -26,4 +27,32 @@ th {
 
 .product_header {
 	text-align: center;
+	color: #EEE;
+	background-color: #337ab7;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 10px;
 }
+
+.divider {
+	color: green;
+	background-color: green;
+}
+
+.dates_header {
+	text-align: center;
+	color: #EEE;
+	font-size: 1.5em;
+	background-color: #337ab7;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+// 'Selected Dates' table
+
+table.selection_tbl {
+}
+table.selection_tbl th {
+	font-size: 1.2em;
+}
+

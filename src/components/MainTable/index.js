@@ -16,7 +16,8 @@ class MainTable extends Component {
 			dates: [],
 			qtr: this.props.qtr,
 			year: this.props.year,
-			product: this.props.product
+			product: this.props.product,
+			assigned_product: this.props.assigned_product
 		};
 	}
 
@@ -32,8 +33,8 @@ class MainTable extends Component {
 
 	// Check if qtr has changed, if so, update qtr state
 	static getDerivedStateFromProps(nextProp, prevState) {
-		if(nextProp.qtr !== prevState.qtr || nextProp.year !== prevState.year) {
-			return { qtr: nextProp.qtr, year: nextProp.year };
+		if(nextProp.qtr !== prevState.qtr || nextProp.year !== prevState.year || nextProp.product !== prevState.product) {
+			return { qtr: nextProp.qtr, year: nextProp.year, product: nextProp.product };
 		} else {
 			return null;
 		}
@@ -42,7 +43,7 @@ class MainTable extends Component {
 	// If qtr changed (above), re-fetch dates
 	// without 'if', app will constantly fetch from backend!
 	componentDidUpdate(prevProps, prevState) {
-		if(prevProps.qtr !== this.state.qtr || prevProps.year !== this.state.year) {
+		if(prevProps.qtr !== this.state.qtr || prevProps.year !== this.state.year || prevProps.product !== this.state.product) {
 			this.getDates(this.state.qtr, this.state.year, this.state.product);
 		}
 	}
@@ -63,7 +64,8 @@ class MainTable extends Component {
 				      <th>Shift Two</th>
 				    </tr>
 				  </thead>
-				  <TableBody dates={this.state.dates} />
+				  <TableBody dates={this.state.dates} 
+				  			clickCell={this.props.clickCell} />
 				</Table>
 			</div>
 		);
@@ -73,7 +75,9 @@ class MainTable extends Component {
 MainTable.propTypes = {
 	qtr: PropTypes.number.isRequired,
 	year: PropTypes.number.isRequired,
-	product: PropTypes.string.isRequired
+	product: PropTypes.string.isRequired,
+	assigned_product: PropTypes.string.isRequired,
+	clickCell: PropTypes.func.isRequired
 };
 
 export default MainTable;

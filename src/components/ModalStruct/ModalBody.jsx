@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../../scss/main.scss';
+import * as api from '../../api';
 
 import { 
 	Modal, 
@@ -10,6 +11,12 @@ import {
 	FormControl,
 	HelpBlock  
 		} from 'react-bootstrap';
+
+const details = () => {
+	api.getUser().then((details) => {
+		details;
+	}).catch(err => console.error(err));
+};
 
 const ModalBody = (props) => {
 	if (!props.authenticated) {
@@ -55,10 +62,13 @@ const ModalBody = (props) => {
 			<Button type="submit">Submit</Button>
 		</form>);
 	} else {
+		//TODO: Getting user details not working
+		console.log(props.getUserDetails());
 		return (
 			<Modal.Body>
 			<h4>User Details</h4>
-			<p><span></span></p>
+			<p>Username: <span>{props.username}</span></p>
+			<p>Details: <span>{props.getUserDetails()}</span></p>
 		</Modal.Body>
 		);
 	}
@@ -68,10 +78,12 @@ const ModalBody = (props) => {
 ModalBody.propTypes = {
 	authenticated: PropTypes.bool.isRequired,
 	username: PropTypes.string,
+	inum: PropTypes.string,
 	handleChange: PropTypes.func,
 	handleSubmit: PropTypes.func,
 	validateINum: PropTypes.func,
-	value: PropTypes.string
+	value: PropTypes.string,
+	getUserDetails: PropTypes.func
 };
 
 export default ModalBody;

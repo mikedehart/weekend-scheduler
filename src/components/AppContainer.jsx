@@ -32,9 +32,14 @@ class AppContainer extends Component {
 
 		this.state = {
 			authenticated: this.props.authenticated,
+			assigned_product: this.props.product,
 			product: this.props.product,
 			qtr: initialQtr,
-			year: initialYear
+			year: initialYear,
+			alert_show: false,
+			alert_status: '',
+			alert_msg: '',
+			alert_header: ''
 		};
 	}
 
@@ -47,6 +52,15 @@ class AppContainer extends Component {
 	// 		.catch(err => console.error(err))
 	// };
 
+	getUserDetails = () => {
+		api.getUser().then((details) => {
+			console.log(details);
+			return details;
+		}).catch(err => console.error(err));
+	};
+
+	// ----- Schedule Functions -----
+
 	changeQtr = (qtr) => {
 		this.setState({
 			qtr
@@ -56,6 +70,15 @@ class AppContainer extends Component {
 	changeYear = (evt) => {
 		this.setState({
 			year: parseInt(evt.target.value, 10)
+		});
+	};
+
+	changeProd = (key) => {
+		let prodValue = "ASE";
+		if (key === 3.2) prodValue = "IQ";
+		else if (key === 3.3) prodValue = "REP";
+		this.setState({
+			product: prodValue
 		});
 	};
 
@@ -73,7 +96,26 @@ class AppContainer extends Component {
 			.catch(err => console.error(err))
 	}
 
+	// ----- Submit Functions -----
+
+	clickCell = (evt, idx) => {
+		console.log(this.props.inum);
+		console.log(this.props.username);
+	};
+
+	triggerAlert = (status, msg, header) => {
+		console.log('trigger alert');
+		this.setState({
+			alert_show: true,
+			alert_status: status,
+			alert_header: header,
+			alert_msg: msg
+		});
+	};
+
+
 	componentWillMount() {
+		this.triggerAlert('danger', 'Hello World', 'Testing');
 
 	}
 
@@ -97,13 +139,15 @@ class AppContainer extends Component {
 									authenticated={this.props.authenticated} 
 									handleRedirect={this.handleRedirect}
 									inum={this.props.inum}
+									changeProd={this.changeProd}
+									getUserDetails={this.getUserDetails}
 									/>
 						</div>
 							<AlertStruct 
-							status='danger' 
-							message='Test success!' 
-							header='Testing 1 2 3' 
-							show={true} />
+							status={this.state.alert_status} 
+							message={this.state.alert_msg}
+							header={this.state.alert_header} 
+							show={this.state.alert_show} />
 						<div className="row">
 							<div className="col-lg-2 col-md-2">
 								<SideNav 
@@ -120,6 +164,8 @@ class AppContainer extends Component {
 										qtr={this.state.qtr}
 										year={this.state.year}
 										product={this.state.product}
+										assigned_product={this.state.assigned_product}
+										clickCell={this.clickCell}
 									/>
 								</div>
 							</div>

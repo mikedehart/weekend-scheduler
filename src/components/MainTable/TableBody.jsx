@@ -13,12 +13,14 @@ const TableBody = (props) =>
 			date={date.date}
 			day={date.day}
 			users={date.users}
+			clickCell={props.clickCell}
 		/>
 	)}
 	</tbody>;
 
 TableBody.propTypes = {
-	dates: PropTypes.array.isRequired
+	dates: PropTypes.array.isRequired,
+	clickCell: PropTypes.func.isRequired
 }
 
 export default TableBody;

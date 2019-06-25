@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../scss/main.scss';
 import { Nav, NavItem, Label, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 
 const SideNav = (props) => (
 
@@ -29,7 +30,18 @@ const SideNav = (props) => (
 			<NavItem eventKey={4}>
 				Quarter 4
 			</NavItem>
+			<NavItem eventKey={5}>
+				Holidays
+			</NavItem>
 		</Nav>
+		<hr className="divider" />
+		<Table className="selection_tbl" striped bordered condensed>
+			<th colspan="3">Selected Dates</th>
+			<tr><td>1/1/2018</td><td>ASE</td><td>X</td></tr>
+			<tr><td>1/2/2018</td><td>ASE</td><td>X</td></tr>
+			<tr><td>1/3/2018</td><td>ASE</td><td>X</td></tr>
+			<tr><td>1/4/2018</td><td>ASE</td><td>X</td></tr>
+		</Table>
 	</div>
 );
 

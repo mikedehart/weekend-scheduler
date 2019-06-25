@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const TableCell = (props) => (
-	<td>{props.name}</td>
+	<td onClick={props.clickCell}>{props.name}</td>
 );
 
 // TableCell.propTypes = {

@@ -17,11 +17,9 @@ const TopNav = (props) => (
 	  <Navbar.Collapse>
 	  	<Nav>
 		    <NavDropdown eventKey={3} title="Schedules" id="basic-nav-dropdown">
-		      <MenuItem eventKey={3.1}>ASE</MenuItem>
-		      <MenuItem eventKey={3.2}>IQ</MenuItem>
-		      <MenuItem eventKey={3.3}>REP</MenuItem>
-		      <MenuItem divider />
-		      <MenuItem eventKey={3.4}>Separated link</MenuItem>
+		      <MenuItem eventKey={3.1} onSelect={props.changeProd}>ASE</MenuItem>
+		      <MenuItem eventKey={3.2} onSelect={props.changeProd}>IQ</MenuItem>
+		      <MenuItem eventKey={3.3} onSelect={props.changeProd}>REP</MenuItem>
 		    </NavDropdown>
 		    <NavItem eventKey={1} href="#">
 		      Link
@@ -36,6 +34,7 @@ const TopNav = (props) => (
 		  		username={props.username}
 		  		inum={props.inum}
 		  		handleRedirect={props.handleRedirect}
+		  		getUserDetails={props.getUserDetails}
 		  	/>
 		  </div>
 	  </Navbar.Collapse>
@@ -46,7 +45,9 @@ TopNav.propTypes = {
 	authenticated: PropTypes.bool.isRequired,
 	username: PropTypes.string.isRequired,
 	inum: PropTypes.string.isRequired,
-	handleRedirect: PropTypes.func
+	handleRedirect: PropTypes.func,
+	changeProd: PropTypes.func,
+	getUserDetails: PropTypes.func
 };
 
 export default TopNav;

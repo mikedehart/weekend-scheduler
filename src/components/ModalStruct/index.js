@@ -76,8 +76,6 @@ class ModalStruct extends React.Component {
 		} else {
 			api.createUser(data.get('inumber'), data.get('username'), data.get('product'))
 			.then((data) => {
-				console.log('THEN HIT');
-				console.log(data.username);
 				this.setState({
 					submitted: true,
 					error: false,
@@ -85,7 +83,6 @@ class ModalStruct extends React.Component {
 				});
 			})
 			.catch((err) => {
-				console.log('ERROR HIT');
 				let errorTxt = err.toString().split(':');
 				console.log(err.toString());
 				this.setState({ 
@@ -174,6 +171,7 @@ class ModalStruct extends React.Component {
 							validateINum={this.validateINum}
 							value={this.state.inum_val}
 							handleChange={this.handleChange}
+							getUserDetails={this.props.getUserDetails}
 						/>
 					</Modal.Body>
 					<Modal.Footer>
@@ -189,7 +187,8 @@ ModalStruct.propTypes = {
 	authenticated: PropTypes.bool.isRequired,
 	username: PropTypes.string.isRequired,
 	inum: PropTypes.string.isRequired,
-	handleRedirect: PropTypes.func
+	handleRedirect: PropTypes.func,
+	getUserDetails: PropTypes.func
 };
 
 export default ModalStruct;

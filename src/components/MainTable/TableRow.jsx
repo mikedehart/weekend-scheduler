@@ -16,20 +16,26 @@ const TableRow = (props) =>
 					/> : 
 					<TableCell 
 						className="free_cell"
+						clickCell={props.clickCell}
 					/>}
 
 				{props.users[1] !== undefined ? 
 					<TableCell 
 						name={props.users[1].username}
 						key={props.users[1]._id}
-					/> : <TableCell />}
+					/> :
+					<TableCell 
+						className="free_cell"
+						clickCell={props.clickCell}
+					/>}
   			</tr>;
 
 
 TableRow.propTypes = {
 	date: PropTypes.string.isRequired,
 	day: PropTypes.string.isRequired,
-	users: PropTypes.array
+	users: PropTypes.array,
+	clickCell: PropTypes.func
 }
 
 // {props.users.map((user, index) =>

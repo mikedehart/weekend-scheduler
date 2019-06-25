@@ -17,6 +17,21 @@ export const getUserDates = () => {
 	//return axios.
 };
 
+
+// ==== Add / Remove user functions ====
+
+// Add user to the selected date
+export const addUser = () => {
+
+};
+
+// Remove user from selected date (admin only)
+export const deleteUser = () => {
+
+};
+
+
+
 export const createUser = (inum, username, product) => {
 	return axios.post(`${config.api.server}/api/users`, {
 		inum: inum,
