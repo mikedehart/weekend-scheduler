@@ -7,35 +7,43 @@ class AlertStruct extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.handleDismiss = this.handleDismiss.bind(this);
-		this.handleShow = this.handleShow.bind(this);
+		// this.handleDismiss = this.handleDismiss.bind(this);
+		// this.handleShow = this.handleShow.bind(this);
 
 		this.state = {
-			show: this.props.show || false
+			show: this.props.show
 		};
 	}
 
 
 	// handle dismissal of the alert
-	handleDismiss() {
-		this.setState({
-			show: false
-		});
-		if(this.props.handleErrorClose) this.props.handleErrorClose();
-	}
+	// handleDismiss() {
+	// 	this.setState({
+	// 		show: false
+	// 	});
+	// 	if(this.props.handleErrorClose) this.props.handleErrorClose();
+	// }
 
-	// show the alert
-	handleShow() {
-		this.setState({
-			show: true
-		});
+	// // show the alert
+	// handleShow() {
+	// 	this.setState({
+	// 		show: true
+	// 	});
+	// }
+
+	componentDidUpdate() {
+		if(this.props.show !== this.state.show){
+			this.setState({
+				show: this.props.show
+			});
+		}
 	}
 
 	render() {
 		if (this.state.show) {
 			return (
 				<div className="row">
-					<Alert bsStyle={this.props.status} onDismiss={this.handleDismiss}>
+					<Alert bsStyle={this.props.status} onDismiss={this.props.handleClose}>
 						<h4>{this.props.header}</h4>
 						<p>{this.props.message}</p>
 						{this.props.loginRedirect ? this.props.loginRedirect() : ''}
@@ -57,7 +65,9 @@ AlertStruct.propTypes = {
 	header: PropTypes.string.isRequired,
 	message: PropTypes.string.isRequired,
 	show: PropTypes.bool,
-	loginRedirect: PropTypes.func
+	loginRedirect: PropTypes.func,
+	handleClose: PropTypes.func,
+	handleShow: PropTypes.func
 };
 
 export default AlertStruct;

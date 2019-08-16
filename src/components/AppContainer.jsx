@@ -5,8 +5,8 @@ import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import config from '../config/config';
 import * as api from '../api';
 
-import {aseVals, iqVals, repVals} from '../data/schedule.js';
-import { testUser } from '../data/users.js';
+//import {aseVals, iqVals, repVals} from '../data/schedule.js';
+//import { testUser } from '../data/users.js';
 
 import Header from './Header';
 import SideNav from './SideNav';
@@ -15,8 +15,7 @@ import MainTable from './MainTable';
 import TopNav from './TopNav';
 import AlertStruct from './AlertStruct';
 import ModalStruct from './ModalStruct';
-
-// TODO: order by for dates!
+import UserOverlay from './UserOverlay';
 
 class AppContainer extends Component {
 
@@ -24,8 +23,13 @@ class AppContainer extends Component {
 	constructor(props) {
 		super(props);
 
+		// Bind functions to [AppContainer] scope
 		this.handleRedirect = this.handleRedirect.bind(this);
+		this.selectOpenDate = this.selectOpenDate.bind(this);
+		this.removeSelectedDate = this.removeSelectedDate.bind(this);
+		this.updateDates = this.updateDates.bind(this);
 
+		// Current date to set initial view
 		const d = new Date();
 		const initialYear = d.getFullYear();
 		const initialQtr = api.getQtr(d.getMonth());
@@ -39,18 +43,11 @@ class AppContainer extends Component {
 			alert_show: false,
 			alert_status: '',
 			alert_msg: '',
-			alert_header: ''
+			alert_header: '',
+			dates: [],
+			selected_dates: []
 		};
 	}
-
-	// getDates = (qtr, year, product) => {
-	// 	api.getQtrDates(qtr, year, product)
-	// 		.then((dates) => {
-	// 			console.log(dates);
-	// 			dates;
-	// 		})
-	// 		.catch(err => console.error(err))
-	// };
 
 	getUserDetails = () => {
 		api.getUser().then((details) => {
@@ -87,7 +84,7 @@ class AppContainer extends Component {
 		const _year = parseInt(this.state.year, 10);
 		const _prod = this.state.product;
 		console.log(`After parse: ${_qtr} ${_year} ${_prod}`);
-		api.getQtrDates(_qtr, _year, product)
+		api.getQtrDates(_qtr, _year, _prod)
 			.then((dates) => {
 				this.setState({
 					dates
@@ -96,15 +93,67 @@ class AppContainer extends Component {
 			.catch(err => console.error(err))
 	}
 
-	// ----- Submit Functions -----
-
-	clickCell = (evt, idx) => {
-		console.log(this.props.inum);
-		console.log(this.props.username);
+	getDates = (qtr, year, product) => {
+		api.getQtrDates(qtr, year, product)
+			.then((dates) => {
+				this.setState({
+					dates
+				});
+			})
+			.catch(err => console.error(err))
 	};
 
+	// ----- Submit Functions -----
+
+	// Select an available date
+	// - Run in TableCell
+	// Takes the dateID of the selected date
+	// Adds to selected_dates state, updates dates
+	selectOpenDate(dateID) {
+		const _userID = this.props.userID;
+		const _dateID = dateID;
+		api.addUser(_userID, _dateID)
+			.then((res) => {
+				console.log(res.date);
+				this.setState({
+					selected_dates: [...this.state.selected_dates, res]
+				}, () => this.updateDates());
+			})
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			});
+	}
+
+
+	// Remove selected date (from sidebar)
+	// - Run in SelectedTable (SideNav)
+	// - Removes user from date and removes
+	// date obj from selected_dates state
+	removeSelectedDate(dateID) {
+		const _userID = this.props.userID;
+		const _dateID = dateID;
+		console.log(_userID, _dateID);
+		api.deleteUser(_userID, _dateID)
+			.then((res) => {
+				var sArray = [...this.state.selected_dates];
+				sArray = sArray.filter(obj => obj._id !== _dateID);
+				this.setState({
+					selected_dates: sArray
+				}, () => this.updateDates());
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}
+
+	// ----- Modal Alert Functions -----
+
+	// Trigger user notification through AlertStruct
+	// status: one of ['info', 'success', 'warning', 'danger']
+	// header: Title of the alert
+	// msg: Text of the message
 	triggerAlert = (status, msg, header) => {
-		console.log('trigger alert');
 		this.setState({
 			alert_show: true,
 			alert_status: status,
@@ -113,9 +162,18 @@ class AppContainer extends Component {
 		});
 	};
 
+	handleAlertClose = () => {
+		this.setState({ alert_show: false });
+	};
+
+	handleAlertOpen = () => {
+		this.setState({ alert_show: true });
+	};
+
 
 	componentWillMount() {
-		this.triggerAlert('danger', 'Hello World', 'Testing');
+		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username}!`);
+		this.getDates(this.state.qtr, this.state.year, this.state.product);
 
 	}
 
@@ -147,7 +205,10 @@ class AppContainer extends Component {
 							status={this.state.alert_status} 
 							message={this.state.alert_msg}
 							header={this.state.alert_header} 
-							show={this.state.alert_show} />
+							show={this.state.alert_show}
+							handleClose={this.handleAlertClose}
+							handleShow={this.handleAlertOpen}
+							/>
 						<div className="row">
 							<div className="col-lg-2 col-md-2">
 								<SideNav 
@@ -156,7 +217,10 @@ class AppContainer extends Component {
 									product={this.state.product}
 									changeQtr={this.changeQtr}
 									changeYear={this.changeYear}
+									selectedDates={this.state.selected_dates}
+									removeDate={this.removeSelectedDate}
 								/>
+								<UserOverlay />
 							</div>
 							<div className="col-lg-10 col-md-10">
 								<div className="col-lg-10 col-md-10">
@@ -165,7 +229,9 @@ class AppContainer extends Component {
 										year={this.state.year}
 										product={this.state.product}
 										assigned_product={this.state.assigned_product}
-										clickCell={this.clickCell}
+										selectDate={this.selectOpenDate}
+										dates={this.state.dates}
+										getDates={this.getDates}
 									/>
 								</div>
 							</div>
@@ -181,6 +247,7 @@ AppContainer.propTypes = {
 	inum: PropTypes.string,
 	product: PropTypes.string,
 	designation: PropTypes.string,
+	userID: PropTypes.string
 };
 
 export default AppContainer;

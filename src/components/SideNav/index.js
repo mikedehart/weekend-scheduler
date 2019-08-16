@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../scss/main.scss';
+import '../../scss/main.scss';
 import { Nav, NavItem, Label, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Table } from 'react-bootstrap';
+
+import SelectedTable from './SelectedTable';
 
 const SideNav = (props) => (
 
@@ -10,7 +12,7 @@ const SideNav = (props) => (
 		<h3 className="product_header">{props.product}</h3>
 		<FormGroup controlId="formControlsSelect">
 		  <ControlLabel>Year</ControlLabel>
-		  <FormControl componentClass="select" placeholder={props.year} onChange={props.changeYear}>
+		  <FormControl componentClass="select" defaultValue={props.year} onChange={props.changeYear}>
 		    <option value="2018">2018</option>
 		    <option value="2019">2019</option>
 		    <option value="2020">2020</option>
@@ -35,13 +37,10 @@ const SideNav = (props) => (
 			</NavItem>
 		</Nav>
 		<hr className="divider" />
-		<Table className="selection_tbl" striped bordered condensed>
-			<th colspan="3">Selected Dates</th>
-			<tr><td>1/1/2018</td><td>ASE</td><td>X</td></tr>
-			<tr><td>1/2/2018</td><td>ASE</td><td>X</td></tr>
-			<tr><td>1/3/2018</td><td>ASE</td><td>X</td></tr>
-			<tr><td>1/4/2018</td><td>ASE</td><td>X</td></tr>
-		</Table>
+		<SelectedTable 
+			selectedDates={props.selectedDates}
+			removeDate={props.removeDate}
+		/>
 	</div>
 );
 
@@ -50,7 +49,9 @@ SideNav.propType = {
 	year: PropTypes.string.isRequired,
 	product: PropTypes.string.isRequired,
 	changeQtr: PropTypes.func.isRequired,
-	changeYear: PropTypes.func.isRequired
+	changeYear: PropTypes.func.isRequired,
+	selectedDates: PropTypes.array.isRequired,
+	removeDate: PropTypes.func.isRequired
 };
 
 export default SideNav;

@@ -13,21 +13,56 @@ export const getUser = () => {
 };
 
 // TODO: Get dates user signed up for
-export const getUserDates = () => {
+export const getUserDates = (userID) => {
 	//return axios.
+	return axios.get(`${config.api.server}/api/dates/user`, {
+		params: {
+			id: userID
+		}
+	})
+	.then((res) => {
+		console.log(res.data);
+		return res.data;
+	})
+	.catch((err) => {
+		console.log(err);
+		throw new Error(err.response.data);
+	});
 };
 
 
 // ==== Add / Remove user functions ====
 
 // Add user to the selected date
-export const addUser = () => {
-
+export const addUser = (userID, dateID) => {
+	return axios.put(`${config.api.server}/api/dates/user/${dateID}`, {
+		id: userID
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		console.log(err);
+		throw new Error(err.response.data);
+	})
 };
 
-// Remove user from selected date (admin only)
-export const deleteUser = () => {
-
+// Remove user from selected date
+// NOTE: Need to use data for DELETE:
+// https://github.com/axios/axios/issues/897#issuecomment-343715381
+export const deleteUser = (userID, dateID) => {
+	return axios.delete(`${config.api.server}/api/dates/user/${dateID}`, {
+		data: {
+			id: userID
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		console.error(err);
+		throw new Error(err.response.data);
+	})
 };
 
 
@@ -42,6 +77,7 @@ export const createUser = (inum, username, product) => {
 		return res.data;
 	})
 	.catch((err) => {
+		console.error(err);
 		throw new Error(err.response.data);
 	});
 };
@@ -65,7 +101,6 @@ export const getQtrDates = (qtr, year, product) => {
 		throw new Error(err.response.data);
 	});
 };
-
 
 export const getQtr = (month) => {
 	let _month = parseInt(month, 10);

@@ -19,6 +19,7 @@ if (auth.checkToken()) {
 				product={user.product}
 				designation={user.designation}
 				authenticated={true}
+				userID={user._id}
 				/>, document.getElementById('root'));
 		}
 	})

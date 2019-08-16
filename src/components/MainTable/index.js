@@ -13,7 +13,7 @@ class MainTable extends Component {
 		super(props);
 
 		this.state = {
-			dates: [],
+			dates: this.props.dates,
 			qtr: this.props.qtr,
 			year: this.props.year,
 			product: this.props.product,
@@ -21,20 +21,21 @@ class MainTable extends Component {
 		};
 	}
 
-	getDates = (qtr, year, product) => {
-		api.getQtrDates(qtr, year, product)
-			.then((dates) => {
-				this.setState({
-					dates
-				});
-			})
-			.catch(err => console.error(err))
-	};
+	// getDates = (qtr, year, product) => {
+	// 	api.getQtrDates(qtr, year, product)
+	// 		.then((dates) => {
+	// 			this.setState({
+	// 				dates
+	// 			});
+	// 		})
+	// 		.catch(err => console.error(err))
+	// };
 
 	// Check if qtr has changed, if so, update qtr state
 	static getDerivedStateFromProps(nextProp, prevState) {
-		if(nextProp.qtr !== prevState.qtr || nextProp.year !== prevState.year || nextProp.product !== prevState.product) {
-			return { qtr: nextProp.qtr, year: nextProp.year, product: nextProp.product };
+		if(nextProp.qtr !== prevState.qtr || nextProp.year !== prevState.year || nextProp.product !== prevState.product 
+			|| nextProp.dates !== prevState.dates) {
+			return { qtr: nextProp.qtr, year: nextProp.year, product: nextProp.product, dates: nextProp.dates };
 		} else {
 			return null;
 		}
@@ -44,12 +45,12 @@ class MainTable extends Component {
 	// without 'if', app will constantly fetch from backend!
 	componentDidUpdate(prevProps, prevState) {
 		if(prevProps.qtr !== this.state.qtr || prevProps.year !== this.state.year || prevProps.product !== this.state.product) {
-			this.getDates(this.state.qtr, this.state.year, this.state.product);
+			this.props.getDates(this.state.qtr, this.state.year, this.state.product);
 		}
 	}
 
 	componentDidMount() {
-		this.getDates(this.state.qtr, this.state.year, this.state.product);
+		this.props.getDates(this.state.qtr, this.state.year, this.state.product);
 	}
 
 	render() {
@@ -65,7 +66,7 @@ class MainTable extends Component {
 				    </tr>
 				  </thead>
 				  <TableBody dates={this.state.dates} 
-				  			clickCell={this.props.clickCell} />
+				  			selectDate={this.props.selectDate} />
 				</Table>
 			</div>
 		);
@@ -77,7 +78,8 @@ MainTable.propTypes = {
 	year: PropTypes.number.isRequired,
 	product: PropTypes.string.isRequired,
 	assigned_product: PropTypes.string.isRequired,
-	clickCell: PropTypes.func.isRequired
+	selectDate: PropTypes.func.isRequired,
+	dates: PropTypes.array.isRequired
 };
 
 export default MainTable;

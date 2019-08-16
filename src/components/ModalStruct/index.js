@@ -38,7 +38,7 @@ class ModalStruct extends React.Component {
 		this.handleErrorClose = this.handleErrorClose.bind(this);
 
 		this.state = {
-			show: !this.props.authenticated,
+			show: this.props.show,
 			username: this.props.username,
 			inum_val: '',
 			error: false,
@@ -138,7 +138,7 @@ class ModalStruct extends React.Component {
 
 		return(
 			<div>
-				<Button bsStyle="primary" bsSize="small" onClick={this.handleShow}>
+				<Button bsStyle="primary" bsSize="small" onClick={this.props.handleShow}>
 					{this.state.username}
 				</Button>
 				<Modal backdrop="static" show={this.state.show} onHide={this.handleClose}>
@@ -175,7 +175,7 @@ class ModalStruct extends React.Component {
 						/>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.handleClose}>Close</Button>
+						<Button onClick={this.props.handleClose}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 			</div>
