@@ -22,7 +22,7 @@ const TopNav = (props) => (
 		      <MenuItem eventKey={3.3} onSelect={props.changeProd}>REP</MenuItem>
 		    </NavDropdown>
 		    <NavItem eventKey={1} href="#">
-		      Link
+		      Admin Mode
 		    </NavItem>
 		    <NavItem eventKey={2} href="#">
 		      Link

@@ -9,7 +9,7 @@ import SelectedRow from './SelectedRow';
 
 const SelectedTable = (props) => (
 	<Table className="selection_tbl" striped bordered condensed>
-			<thead><tr><td colSpan="3">Selected</td></tr></thead>
+			<thead><tr><td colSpan="4">Selected</td></tr></thead>
 		<tbody>
 			{props.selectedDates.map((date) => 
 				<SelectedRow 
@@ -18,6 +18,7 @@ const SelectedTable = (props) => (
 					product={date.product}
 					dateid={date._id}
 					removeDate={props.removeDate}
+					confirmDate={props.confirmDate}
 				/>
 			)}
 		</tbody>
@@ -26,7 +27,8 @@ const SelectedTable = (props) => (
 
 SelectedTable.propTypes = {
 	selectedDates: PropTypes.array.isRequired,
-	removeDate: PropTypes.func.isRequired
+	removeDate: PropTypes.func.isRequired,
+	confirmDate: PropTypes.func.isRequired
 }
 
 export default SelectedTable;

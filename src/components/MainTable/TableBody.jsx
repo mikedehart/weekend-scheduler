@@ -15,13 +15,17 @@ const TableBody = (props) =>
 			day={date.day}
 			users={date.users}
 			selectDate={props.selectDate}
+			designation={props.designation}
+			removeUser={props.removeUser}
 		/>
 	)}
 	</tbody>;
 
 TableBody.propTypes = {
 	dates: PropTypes.array.isRequired,
-	selectDate: PropTypes.func.isRequired
+	designation: PropTypes.string.isRequired,
+	selectDate: PropTypes.func.isRequired,
+	removeUser: PropTypes.func
 }
 
 export default TableBody;

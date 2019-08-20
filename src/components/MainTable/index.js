@@ -66,7 +66,10 @@ class MainTable extends Component {
 				    </tr>
 				  </thead>
 				  <TableBody dates={this.state.dates} 
-				  			selectDate={this.props.selectDate} />
+				  			selectDate={this.props.selectDate} 
+				  			designation={this.props.designation}
+				  			removeUser={this.props.removeUser}
+	  				/>
 				</Table>
 			</div>
 		);
@@ -78,8 +81,11 @@ MainTable.propTypes = {
 	year: PropTypes.number.isRequired,
 	product: PropTypes.string.isRequired,
 	assigned_product: PropTypes.string.isRequired,
+	designation: PropTypes.string.isRequired,
 	selectDate: PropTypes.func.isRequired,
-	dates: PropTypes.array.isRequired
+	dates: PropTypes.array.isRequired,
+	// Admin functions
+	removeUser: PropTypes.func
 };
 
 export default MainTable;

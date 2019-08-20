@@ -8,7 +8,8 @@ const SelectedRow = (props) => (
 	<tr>
 		<td>{props.date}</td>
 		<td>{props.product}</td>
-		<td onClick={() => {props.removeDate(props.dateid)}}>✖</td>
+		<td className="remove_row" onClick={() => {props.removeDate(props.dateid)}}>❌</td>
+		<td className="confirm_row" onClick={() => {props.confirmDate(props.dateid)}}>✔️</td>
 	</tr>
 
 );

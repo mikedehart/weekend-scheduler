@@ -31,6 +31,29 @@ export const getUserDates = (userID) => {
 };
 
 
+// TODO: Get all users (for admin dropdowns)
+
+export const getAllUsers = () => {
+
+};
+
+// Find a user by username:
+// Currently, return all users and filter by username
+// Probably a better way to do this
+export const findUser = (username) => {
+	return axios.get(`${config.api.server}/api/users`)
+		.then((res) => {
+			let userArray = res.data;
+			userArray = userArray.filter(usr => usr.username === username);
+			return userArray[0];
+		})
+		.catch((err) => {
+			console.log(err);
+			throw new Error(err.response.data);
+		});
+};
+
+
 // ==== Add / Remove user functions ====
 
 // Add user to the selected date
@@ -42,7 +65,7 @@ export const addUser = (userID, dateID) => {
 		return res.data;
 	})
 	.catch((err) => {
-		console.log(err);
+		console.error(err);
 		throw new Error(err.response.data);
 	})
 };

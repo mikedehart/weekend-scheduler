@@ -18,7 +18,6 @@ th, thead {
 
 td.free_cell {
 	background-color: green;
-	color: green;
 }
 
 .userSelected {
@@ -49,10 +48,14 @@ td.free_cell {
 }
 
 // 'Selected Dates' table
+// ----------------------
 
 table.selection_tbl {
 }
 table.selection_tbl th {
 	font-size: 1.2em;
+}
+td.remove_row {
+	color: red;
 }
 

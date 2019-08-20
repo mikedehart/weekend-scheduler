@@ -138,7 +138,7 @@ class ModalStruct extends React.Component {
 
 		return(
 			<div>
-				<Button bsStyle="primary" bsSize="small" onClick={this.props.handleShow}>
+				<Button bsStyle="primary" bsSize="small" onClick={this.handleShow}>
 					{this.state.username}
 				</Button>
 				<Modal backdrop="static" show={this.state.show} onHide={this.handleClose}>
@@ -149,7 +149,7 @@ class ModalStruct extends React.Component {
 						{isSuccess ? (
 							<AlertStruct 
 							status='success' 
-							message={this.state.msg + " Redirecting in 2 seconds..."}
+							message={"Redirecting in 2 seconds..."}
 							header='User Added!' 
 							loginRedirect={this.loginRedirect} 
 							show={true} />
@@ -175,7 +175,7 @@ class ModalStruct extends React.Component {
 						/>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.props.handleClose}>Close</Button>
+						<Button onClick={this.handleClose}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 			</div>

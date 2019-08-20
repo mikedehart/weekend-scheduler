@@ -40,6 +40,7 @@ const SideNav = (props) => (
 		<SelectedTable 
 			selectedDates={props.selectedDates}
 			removeDate={props.removeDate}
+			confirmDate={props.confirmDate}
 		/>
 	</div>
 );
@@ -51,7 +52,8 @@ SideNav.propType = {
 	changeQtr: PropTypes.func.isRequired,
 	changeYear: PropTypes.func.isRequired,
 	selectedDates: PropTypes.array.isRequired,
-	removeDate: PropTypes.func.isRequired
+	removeDate: PropTypes.func.isRequired,
+	confirmDate: PropTypes.func.isRequired
 };
 
 export default SideNav;

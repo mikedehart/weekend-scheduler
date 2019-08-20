@@ -27,7 +27,9 @@ class AppContainer extends Component {
 		this.handleRedirect = this.handleRedirect.bind(this);
 		this.selectOpenDate = this.selectOpenDate.bind(this);
 		this.removeSelectedDate = this.removeSelectedDate.bind(this);
+		this.confirmSelectedDate = this.confirmSelectedDate.bind(this);
 		this.updateDates = this.updateDates.bind(this);
+		this.removeUser = this.removeUser.bind(this);
 
 		// Current date to set initial view
 		const d = new Date();
@@ -45,7 +47,8 @@ class AppContainer extends Component {
 			alert_msg: '',
 			alert_header: '',
 			dates: [],
-			selected_dates: []
+			selected_dates: [],
+			assigned_dates: []
 		};
 	}
 
@@ -53,7 +56,10 @@ class AppContainer extends Component {
 		api.getUser().then((details) => {
 			console.log(details);
 			return details;
-		}).catch(err => console.error(err));
+		}).catch((err) => {
+			this.triggerAlert('danger', err.message, 'Error!');
+			console.error(err);
+		});
 	};
 
 	// ----- Schedule Functions -----
@@ -83,14 +89,16 @@ class AppContainer extends Component {
 		const _qtr = parseInt(this.state.qtr, 10);
 		const _year = parseInt(this.state.year, 10);
 		const _prod = this.state.product;
-		console.log(`After parse: ${_qtr} ${_year} ${_prod}`);
 		api.getQtrDates(_qtr, _year, _prod)
 			.then((dates) => {
 				this.setState({
 					dates
 				});
 			})
-			.catch(err => console.error(err))
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			});
 	}
 
 	getDates = (qtr, year, product) => {
@@ -100,7 +108,11 @@ class AppContainer extends Component {
 					dates
 				});
 			})
-			.catch(err => console.error(err))
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+
+			});
 	};
 
 	// ----- Submit Functions -----
@@ -114,7 +126,6 @@ class AppContainer extends Component {
 		const _dateID = dateID;
 		api.addUser(_userID, _dateID)
 			.then((res) => {
-				console.log(res.date);
 				this.setState({
 					selected_dates: [...this.state.selected_dates, res]
 				}, () => this.updateDates());
@@ -133,7 +144,6 @@ class AppContainer extends Component {
 	removeSelectedDate(dateID) {
 		const _userID = this.props.userID;
 		const _dateID = dateID;
-		console.log(_userID, _dateID);
 		api.deleteUser(_userID, _dateID)
 			.then((res) => {
 				var sArray = [...this.state.selected_dates];
@@ -143,11 +153,24 @@ class AppContainer extends Component {
 				}, () => this.updateDates());
 			})
 			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
 				console.error(err);
 			});
 	}
 
-	// ----- Modal Alert Functions -----
+	// Confirm selected date
+	// Since user already added, all we have to do it remove
+	// this row from the selected_list array.
+	confirmSelectedDate(dateID) {
+		const _dateID = dateID;
+		let sArray = [...this.state.selected_dates];
+		sArray = sArray.filter(obj => obj._id !== _dateID);
+		this.setState({
+			selected_dates: sArray
+		}, () => this.updateDates());
+	}
+
+	// --------- Modal Alert Functions -----------
 
 	// Trigger user notification through AlertStruct
 	// status: one of ['info', 'success', 'warning', 'danger']
@@ -161,6 +184,27 @@ class AppContainer extends Component {
 			alert_msg: msg
 		});
 	};
+
+
+
+	// ----------- Admin Functions -------------
+
+	removeUser(username, dateID) {
+		api.findUser(username)
+			.then((usr) => {
+				api.deleteUser(usr._id, dateID)
+					.then((res) => {
+						this.updateDates();
+					})
+					.catch(err => console.error(err));
+			})
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			});
+	};
+
+	// ------- Component-specific Functions -------
 
 	handleAlertClose = () => {
 		this.setState({ alert_show: false });
@@ -182,6 +226,7 @@ class AppContainer extends Component {
 		// const yr = d.getFullYear();
 		// const qtr = api.getQtr(d.getMonth());
 		// this.getDates(this.state.qtr, this.state.year, this.state.product);
+		//this.removeUser("test", "5c0579b5d6a5bd53182361e1");
 	}
 
 	handleRedirect = () => {
@@ -219,6 +264,7 @@ class AppContainer extends Component {
 									changeYear={this.changeYear}
 									selectedDates={this.state.selected_dates}
 									removeDate={this.removeSelectedDate}
+									confirmDate={this.confirmSelectedDate}
 								/>
 								<UserOverlay />
 							</div>
@@ -229,9 +275,12 @@ class AppContainer extends Component {
 										year={this.state.year}
 										product={this.state.product}
 										assigned_product={this.state.assigned_product}
+										designation={this.props.designation}
 										selectDate={this.selectOpenDate}
 										dates={this.state.dates}
 										getDates={this.getDates}
+										// Admin functions
+										removeUser={this.removeUser}
 									/>
 								</div>
 							</div>

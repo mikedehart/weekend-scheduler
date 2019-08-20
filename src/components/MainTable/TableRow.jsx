@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../../scss/main.scss';
-import { Popover, OverlayTrigger } from 'react-bootstrap';
 
 import TableCell from './TableCell'
 
@@ -14,8 +12,9 @@ const TableRow = (props) =>
 						name={props.users[0].username}
 						key={props.users[0]._id}
 						className="occupied_cell"
-						selectDate={props.selectDate}
 						dateID={props.dateID}
+						designation={props.designation}
+						removeUser={props.removeUser}
 					/> 
 					: 
 					<TableCell 
@@ -29,8 +28,9 @@ const TableRow = (props) =>
 						name={props.users[1].username}
 						key={props.users[1]._id}
 						className="occupied_cell"
-						selectDate={props.selectDate}
 						dateID={props.dateID}
+						designation={props.designation}
+						removeUser={props.removeUser}
 					/> 
 					:
 					<TableCell 
@@ -44,8 +44,10 @@ const TableRow = (props) =>
 TableRow.propTypes = {
 	date: PropTypes.string.isRequired,
 	day: PropTypes.string.isRequired,
+	designation: PropTypes.string.isRequired,
 	users: PropTypes.array,
-	selectDate: PropTypes.func
+	selectDate: PropTypes.func,
+	removeUser: PropTypes.func
 }
 
 // {props.users.map((user, index) =>
