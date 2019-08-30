@@ -17,7 +17,7 @@ th, thead {
 }
 
 td.free_cell {
-	background-color: green;
+	background-color: #3D9140;
 }
 
 .userSelected {
@@ -55,7 +55,11 @@ table.selection_tbl {
 table.selection_tbl th {
 	font-size: 1.2em;
 }
-td.remove_row {
-	color: red;
+td.remove_row:hover {
+	cursor: pointer;
+}
+td.confirm_row:hover {
+	cursor: pointer;
+
 }
 

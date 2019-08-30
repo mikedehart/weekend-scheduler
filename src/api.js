@@ -31,10 +31,17 @@ export const getUserDates = (userID) => {
 };
 
 
-// TODO: Get all users (for admin dropdowns)
-
-export const getAllUsers = () => {
-
+// TODO: Filter this by product?
+export const getAllUsernames = () => {
+	return axios.get(`${config.api.server}/api/users`)
+	.then((res) => {
+		let objArray = res.data;
+		return objArray;
+	})
+	.catch((err) => {
+		console.log(err);
+		throw new Error(err.response.data);
+	});
 };
 
 // Find a user by username:
@@ -106,6 +113,8 @@ export const createUser = (inum, username, product) => {
 };
 
 
+// ======== Date functions ========
+
 export const getQtrDates = (qtr, year, product) => {
 	const _qtr = parseInt(qtr, 10);
 	const _year = parseInt(year, 10);
@@ -152,6 +161,31 @@ export const getQtr = (month) => {
 			return null;
 	}
 };
+
+// ======== Quarter functions ========
+
+export const getAllQtrs = () => {
+	return axios.get(`${config.api.server}/api/quarters`)
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => {
+			throw new Error(err.response.data);
+		})
+};
+
+export const toggleLockQtr = (qtr_id, lock_bool) => {
+	return axios.put(`${config.api.server}/api/quarters/${qtr_id}`, {
+		locked: lock_bool
+		})
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => {
+			throw new Error(err.response.data);
+		})
+};
+
 
 // Example of including the authorization header for token
 

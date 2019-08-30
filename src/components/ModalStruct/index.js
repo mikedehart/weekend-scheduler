@@ -66,7 +66,6 @@ class ModalStruct extends React.Component {
 	handleSubmit(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
-		console.log(data.get('inumber'), data.get('username'), data.get('product'));
 		const validate = this.finalValidation(data.get('inumber'), data.get('username'), data.get('product'));
 		if(!validate[0]){
 			this.setState({
@@ -131,7 +130,6 @@ class ModalStruct extends React.Component {
 	}
 
 
-	//TODO
 	render() {
 		let isError = this.state.error;
 		let isSuccess = this.state.submitted;

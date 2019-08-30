@@ -15,7 +15,6 @@ import MainTable from './MainTable';
 import TopNav from './TopNav';
 import AlertStruct from './AlertStruct';
 import ModalStruct from './ModalStruct';
-import UserOverlay from './UserOverlay';
 
 class AppContainer extends Component {
 
@@ -30,6 +29,8 @@ class AppContainer extends Component {
 		this.confirmSelectedDate = this.confirmSelectedDate.bind(this);
 		this.updateDates = this.updateDates.bind(this);
 		this.removeUser = this.removeUser.bind(this);
+		this.changeUser = this.changeUser.bind(this);
+		this.toggleLockQtr = this.toggleLockQtr.bind(this);
 
 		// Current date to set initial view
 		const d = new Date();
@@ -48,7 +49,8 @@ class AppContainer extends Component {
 			alert_header: '',
 			dates: [],
 			selected_dates: [],
-			assigned_dates: []
+			assigned_dates: [],
+			qtrList: []
 		};
 	}
 
@@ -64,6 +66,9 @@ class AppContainer extends Component {
 
 	// ----- Schedule Functions -----
 
+	// Three functions below handle
+	// updating the calendar based on changes
+	// to quarter, year, or product.
 	changeQtr = (qtr) => {
 		this.setState({
 			qtr
@@ -72,7 +77,8 @@ class AppContainer extends Component {
 
 	changeYear = (evt) => {
 		this.setState({
-			year: parseInt(evt.target.value, 10)
+			year: parseInt(evt.target.value, 10),
+			qtr: 1
 		});
 	};
 
@@ -84,6 +90,8 @@ class AppContainer extends Component {
 			product: prodValue
 		});
 	};
+
+
 
 	updateDates() {
 		const _qtr = parseInt(this.state.qtr, 10);
@@ -194,7 +202,12 @@ class AppContainer extends Component {
 			.then((usr) => {
 				api.deleteUser(usr._id, dateID)
 					.then((res) => {
-						this.updateDates();
+						this.triggerAlert('success', `User deleted from ${res.date}`, "User Deleted");
+						let sArray = [...this.state.selected_dates];
+						sArray = sArray.filter(obj => obj._id !== dateID);
+						this.setState({
+							selected_dates: sArray
+						}, () => this.updateDates());
 					})
 					.catch(err => console.error(err));
 			})
@@ -203,6 +216,87 @@ class AppContainer extends Component {
 				console.error(err);
 			});
 	};
+
+
+	changeUser(evt) {
+		evt.preventDefault();
+		const data = new FormData(evt.target);
+		const _currentUsr = data.get('current_user');
+		const _newUsr = data.get('new_user');
+		const _dateID = data.get('dateID');
+		api.findUser(_currentUsr)
+			.then((usr) => {
+				api.deleteUser(usr._id, _dateID)
+					.then((res) => {
+						api.findUser(_newUsr)
+							.then((newusr) => {
+								api.addUser(newusr._id, _dateID)
+									.then((res) => {
+										this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
+										let sArray = [...this.state.selected_dates];
+										sArray = sArray.filter(obj => obj._id !== _dateID);
+										this.setState({
+											selected_dates: sArray
+										}, () => this.updateDates());
+									})
+									.catch((err) => {
+										this.triggerAlert('danger', err.message, 'Error!');
+										console.error(err);
+									});
+							})
+							.catch((err) => {
+								this.triggerAlert('danger', err.message, 'Error!');
+								console.error(err);
+							});
+					})
+					.catch((err) => {
+						this.triggerAlert('danger', err.message, 'Error!');
+						console.error(err);
+					});
+			})
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			});
+	};
+
+	// Qtr functions
+
+	getQtrs() {
+		api.getAllQtrs()
+			.then((res) => {
+				this.setState({
+					qtrList: res
+				});
+			})
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			})
+
+	};
+
+	toggleLockQtr(evt) {
+		evt.preventDefault();
+		const data = new FormData(evt.target);
+		let lockBool = false;
+		let changedQtr = data.get('unlock_qtr');
+		if(!changedQtr) {
+			changedQtr = data.get('lock_qtr');
+			lockBool = true;
+		}
+		api.toggleLockQtr(changedQtr, lockBool)
+			.then((res) => {
+				this.triggerAlert('success', `Quarter changed: ${res.quarter}-${res.year}: Locked: ${res.locked}`, 'Quarter Changed');
+				this.getQtrs();
+			})
+			.catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			})
+	}
+
+
 
 	// ------- Component-specific Functions -------
 
@@ -218,6 +312,7 @@ class AppContainer extends Component {
 	componentWillMount() {
 		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username}!`);
 		this.getDates(this.state.qtr, this.state.year, this.state.product);
+		this.getQtrs();
 
 	}
 
@@ -227,6 +322,7 @@ class AppContainer extends Component {
 		// const qtr = api.getQtr(d.getMonth());
 		// this.getDates(this.state.qtr, this.state.year, this.state.product);
 		//this.removeUser("test", "5c0579b5d6a5bd53182361e1");
+		//console.log(api.getAllUsernames());
 	}
 
 	handleRedirect = () => {
@@ -237,22 +333,25 @@ class AppContainer extends Component {
 		return(
 					<div className="container">
 						<div className="row">
-								<TopNav className="nav_bar" 
-									username={this.props.username || "Create Account"} 
-									authenticated={this.props.authenticated} 
-									handleRedirect={this.handleRedirect}
-									inum={this.props.inum}
-									changeProd={this.changeProd}
-									getUserDetails={this.getUserDetails}
-									/>
+							<TopNav className="nav_bar" 
+								username={this.props.username || "Create Account"} 
+								authenticated={this.props.authenticated} 
+								handleRedirect={this.handleRedirect}
+								inum={this.props.inum}
+								changeProd={this.changeProd}
+								qtrList={this.state.qtrList}
+								getUserDetails={this.getUserDetails}
+								designation={this.props.designation}
+								toggleLockQtr={this.toggleLockQtr}
+							/>
 						</div>
 							<AlertStruct 
-							status={this.state.alert_status} 
-							message={this.state.alert_msg}
-							header={this.state.alert_header} 
-							show={this.state.alert_show}
-							handleClose={this.handleAlertClose}
-							handleShow={this.handleAlertOpen}
+								status={this.state.alert_status} 
+								message={this.state.alert_msg}
+								header={this.state.alert_header} 
+								show={this.state.alert_show}
+								handleClose={this.handleAlertClose}
+								handleShow={this.handleAlertOpen}
 							/>
 						<div className="row">
 							<div className="col-lg-2 col-md-2">
@@ -260,13 +359,13 @@ class AppContainer extends Component {
 									qtr={this.state.qtr}
 									year={this.state.year}
 									product={this.state.product}
+									qtrList={this.state.qtrList}
 									changeQtr={this.changeQtr}
 									changeYear={this.changeYear}
 									selectedDates={this.state.selected_dates}
 									removeDate={this.removeSelectedDate}
 									confirmDate={this.confirmSelectedDate}
 								/>
-								<UserOverlay />
 							</div>
 							<div className="col-lg-10 col-md-10">
 								<div className="col-lg-10 col-md-10">
@@ -281,6 +380,7 @@ class AppContainer extends Component {
 										getDates={this.getDates}
 										// Admin functions
 										removeUser={this.removeUser}
+										changeUser={this.changeUser}
 									/>
 								</div>
 							</div>

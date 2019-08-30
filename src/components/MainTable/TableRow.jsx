@@ -15,6 +15,7 @@ const TableRow = (props) =>
 						dateID={props.dateID}
 						designation={props.designation}
 						removeUser={props.removeUser}
+						changeUser={props.changeUser}
 					/> 
 					: 
 					<TableCell 
@@ -31,6 +32,7 @@ const TableRow = (props) =>
 						dateID={props.dateID}
 						designation={props.designation}
 						removeUser={props.removeUser}
+						changeUser={props.changeUser}
 					/> 
 					:
 					<TableCell 
@@ -47,8 +49,10 @@ TableRow.propTypes = {
 	designation: PropTypes.string.isRequired,
 	users: PropTypes.array,
 	selectDate: PropTypes.func,
-	removeUser: PropTypes.func
-}
+	// Admin functions
+	removeUser: PropTypes.func,
+	changeUser: PropTypes.func
+};
 
 // {props.users.map((user, index) =>
 // 	  				<TableCell 

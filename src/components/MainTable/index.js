@@ -17,19 +17,9 @@ class MainTable extends Component {
 			qtr: this.props.qtr,
 			year: this.props.year,
 			product: this.props.product,
-			assigned_product: this.props.assigned_product
+			assigned_product: this.props.assigned_product,
 		};
 	}
-
-	// getDates = (qtr, year, product) => {
-	// 	api.getQtrDates(qtr, year, product)
-	// 		.then((dates) => {
-	// 			this.setState({
-	// 				dates
-	// 			});
-	// 		})
-	// 		.catch(err => console.error(err))
-	// };
 
 	// Check if qtr has changed, if so, update qtr state
 	static getDerivedStateFromProps(nextProp, prevState) {
@@ -69,6 +59,7 @@ class MainTable extends Component {
 				  			selectDate={this.props.selectDate} 
 				  			designation={this.props.designation}
 				  			removeUser={this.props.removeUser}
+				  			changeUser={this.props.changeUser}
 	  				/>
 				</Table>
 			</div>
@@ -85,7 +76,8 @@ MainTable.propTypes = {
 	selectDate: PropTypes.func.isRequired,
 	dates: PropTypes.array.isRequired,
 	// Admin functions
-	removeUser: PropTypes.func
+	removeUser: PropTypes.func,
+	changeUser: PropTypes.func
 };
 
 export default MainTable;

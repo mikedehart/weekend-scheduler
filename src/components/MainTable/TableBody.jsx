@@ -16,7 +16,9 @@ const TableBody = (props) =>
 			users={date.users}
 			selectDate={props.selectDate}
 			designation={props.designation}
+			// Admin functions
 			removeUser={props.removeUser}
+			changeUser={props.changeUser}
 		/>
 	)}
 	</tbody>;
@@ -25,8 +27,10 @@ TableBody.propTypes = {
 	dates: PropTypes.array.isRequired,
 	designation: PropTypes.string.isRequired,
 	selectDate: PropTypes.func.isRequired,
-	removeUser: PropTypes.func
-}
+	// Admin functions
+	removeUser: PropTypes.func,
+	changeUser: PropTypes.func
+};
 
 export default TableBody;
 
