@@ -2,12 +2,21 @@ import config from './config/config';
 
 // Save token to localStorage
 export const setToken = (idToken) => {
-	localStorage.setItem('scheduler_token', idToken);
+	if( typeof window !== 'undefined') {
+		localStorage.setItem('scheduler_token', idToken);
+	} else {
+		console.log('localStorage undefined!');
+	}
 };
 
 // Get token from localStorage
 export const getToken = () => {
-	return localStorage.getItem('scheduler_token');
+	if( typeof window !== 'undefined') {
+		return localStorage.getItem('scheduler_token');
+	}
+	else {
+		return null;
+	}
 };
 
 export const checkToken = () => {
@@ -38,12 +47,20 @@ function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    if (typeof document !== 'undefined') {
+    	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
 }
 
 function getCookie(cname) {
     var name = cname + "=";
-    var ca = document.cookie.split(';');
+    let ca;
+    if (typeof document !== 'undefined') {
+    	ca = document.cookie.split(';');
+    }
+    else {
+    	ca = "";
+    }
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') {

@@ -20,7 +20,7 @@ const config = {
       test: /(\.css|.scss)$/,
       exclude: /node_modules/,
       use: [{
-          loader: "style-loader" // creates style nodes from JS strings
+          loader: "universal-style-loader" // creates style nodes from JS strings
       }, {
           loader: "css-loader" // translates CSS into CommonJS
       }, {

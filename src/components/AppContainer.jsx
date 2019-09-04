@@ -330,7 +330,7 @@ class AppContainer extends Component {
 			window.location.replace(`${config.api.server}/auth/signin`);
 		}
 		else {
-			console.error('Window undefined!');
+			console.log('Window undefined!');
 		}
 	}
 

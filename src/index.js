@@ -10,17 +10,21 @@ if (auth.checkToken()) {
 	.then(user => {
 		if(!user) { // Verified I-number, but not in database
 			let inum = auth.getINum();
-			ReactDOM.render(<AppContainer  
-				authenticated={false} inum={inum} />, document.getElementById('root'));
+			if (typeof document !== 'undefined') {
+				ReactDOM.render(<AppContainer  
+					authenticated={false} inum={inum} />, document.getElementById('root'));
+			}
 		} else {
-			ReactDOM.render(<AppContainer 
-				inum={user.inum}
-				username={user.username}
-				product={user.product}
-				designation={user.designation}
-				authenticated={true}
-				userID={user._id}
-				/>, document.getElementById('root'));
+			if (typeof document !== 'undefined') {
+				ReactDOM.render(<AppContainer 
+					inum={user.inum}
+					username={user.username}
+					product={user.product}
+					designation={user.designation}
+					authenticated={true}
+					userID={user._id}
+					/>, document.getElementById('root'));
+			}
 		}
 	})
 	.catch(err => console.error(err));
@@ -29,14 +33,18 @@ if (auth.checkToken()) {
 	// No valid token set or in cookie. Check for inum cookie or redirect to auth
 	let inum = auth.getINum();
 	if(!inum) {
-		if(typeof window !== 'undefined')
+		if(typeof window !== 'undefined') {
 			window.location.replace(`${config.api.server}/auth/signin`);
-		else
-			console.error('Window undefined!');
+		}
+		else {
+			console.log('Window undefined!');
+		}
 	} else {
 		// Product is required by MainTable. Defaulting to ASE for now.
-		ReactDOM.render(<AppContainer  
-			authenticated={false} inum={inum} product="ASE" />, document.getElementById('root'));
+		if (typeof document !== 'undefined') {
+			ReactDOM.render(<AppContainer  
+				authenticated={false} inum={inum} product="ASE" />, document.getElementById('root'));
+		}
 	}
 
 }
