@@ -29,7 +29,10 @@ if (auth.checkToken()) {
 	// No valid token set or in cookie. Check for inum cookie or redirect to auth
 	let inum = auth.getINum();
 	if(!inum) {
-		window.location.replace(`${config.api.server}/auth/signin`);
+		if(typeof window !== 'undefined')
+			window.location.replace(`${config.api.server}/auth/signin`);
+		else
+			console.error('Window undefined!');
 	} else {
 		// Product is required by MainTable. Defaulting to ASE for now.
 		ReactDOM.render(<AppContainer  

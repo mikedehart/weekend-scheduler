@@ -326,7 +326,12 @@ class AppContainer extends Component {
 	}
 
 	handleRedirect = () => {
-		window.location.replace(`${config.api.server}/auth/signin`);
+		if(typeof window !== 'undefined') {
+			window.location.replace(`${config.api.server}/auth/signin`);
+		}
+		else {
+			console.error('Window undefined!');
+		}
 	}
 
 	render() {
