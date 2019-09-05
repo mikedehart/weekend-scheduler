@@ -131,8 +131,9 @@ class AppContainer extends Component {
 	// Adds to selected_dates state, updates dates
 	selectOpenDate(dateID) {
 		const _userID = this.props.userID;
+		const _designation = this.props.designation;
 		const _dateID = dateID;
-		api.addUser(_userID, _dateID)
+		api.addUser(_userID, _designation, _dateID)
 			.then((res) => {
 				this.setState({
 					selected_dates: [...this.state.selected_dates, res]
@@ -224,13 +225,14 @@ class AppContainer extends Component {
 		const _currentUsr = data.get('current_user');
 		const _newUsr = data.get('new_user');
 		const _dateID = data.get('dateID');
+		const _designation = this.props.designation;
 		api.findUser(_currentUsr)
 			.then((usr) => {
 				api.deleteUser(usr._id, _dateID)
 					.then((res) => {
 						api.findUser(_newUsr)
 							.then((newusr) => {
-								api.addUser(newusr._id, _dateID)
+								api.addUser(newusr._id, _designation, _dateID)
 									.then((res) => {
 										this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
 										let sArray = [...this.state.selected_dates];
@@ -310,7 +312,7 @@ class AppContainer extends Component {
 
 
 	componentWillMount() {
-		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username}!`);
+		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
 		this.getDates(this.state.qtr, this.state.year, this.state.product);
 		this.getQtrs();
 

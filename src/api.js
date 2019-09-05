@@ -64,9 +64,10 @@ export const findUser = (username) => {
 // ==== Add / Remove user functions ====
 
 // Add user to the selected date
-export const addUser = (userID, dateID) => {
+export const addUser = (userID, designation, dateID) => {
 	return axios.put(`${config.api.server}/api/dates/user/${dateID}`, {
-		id: userID
+		id: userID,
+		designation: designation
 	})
 	.then((res) => {
 		return res.data;

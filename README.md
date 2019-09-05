@@ -1,7 +1,6 @@
-*****************
-Weekend Scheduler
-*****************
-Author: Mike DeHart
+
+# Weekend Scheduler
+### Author: Mike DeHart
 
 - Internal tool used to schedule weekend shifts
 - Covers:
@@ -11,7 +10,7 @@ Author: Mike DeHart
 	- Scheduling of alt days
 	- Ability to switch shifts (?)
 
-Installation:
+## Installation:
 
 - Clone the repository
 - npm install
