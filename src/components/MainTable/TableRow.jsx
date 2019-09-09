@@ -7,10 +7,11 @@ const TableRow = (props) =>
 			<tr>
 				<td>{props.date}</td>
 				<td>{props.day}</td>
+				{props.isHoliday ? <td>{props.desc}</td> : null}
 				{props.users[0] !== undefined ? 
 					<TableCell 
 						name={props.users[0].username}
-						key={props.users[0]._id}
+						key={`${props.users[0]._id}1`}
 						className="occupied_cell"
 						dateID={props.dateID}
 						designation={props.designation}
@@ -27,7 +28,7 @@ const TableRow = (props) =>
 				{props.users[1] !== undefined ? 
 					<TableCell 
 						name={props.users[1].username}
-						key={props.users[1]._id}
+						key={`${props.users[1]._id}2`}
 						className="occupied_cell"
 						dateID={props.dateID}
 						designation={props.designation}
@@ -46,7 +47,9 @@ const TableRow = (props) =>
 TableRow.propTypes = {
 	date: PropTypes.string.isRequired,
 	day: PropTypes.string.isRequired,
+	dateID: PropTypes.string.isRequired,
 	designation: PropTypes.string.isRequired,
+	isHoliday: PropTypes.bool.isRequired,
 	users: PropTypes.array,
 	selectDate: PropTypes.func,
 	// Admin functions

@@ -78,11 +78,40 @@ export const addUser = (userID, designation, dateID) => {
 	})
 };
 
+export const addHolidayUser = (userID, designation, dateID) => {
+	return axios.put(`${config.api.server}/api/holidays/user/${dateID}`, {
+		id: userID,
+		designation: designation
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		console.error(err);
+		throw new Error(err.response.data);
+	})
+};
+
 // Remove user from selected date
 // NOTE: Need to use data for DELETE:
 // https://github.com/axios/axios/issues/897#issuecomment-343715381
 export const deleteUser = (userID, dateID) => {
 	return axios.delete(`${config.api.server}/api/dates/user/${dateID}`, {
+		data: {
+			id: userID
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		console.error(err);
+		throw new Error(err.response.data);
+	})
+};
+
+export const deleteHolidayUser = (userID, dateID) => {
+	return axios.delete(`${config.api.server}/api/holidays/user/${dateID}`, {
 		data: {
 			id: userID
 		}
@@ -120,19 +149,34 @@ export const getQtrDates = (qtr, year, product) => {
 	const _qtr = parseInt(qtr, 10);
 	const _year = parseInt(year, 10);
 	const _product = product.toUpperCase();
-	return axios.get(`${config.api.server}/api/dates`, {
-		params: {
-			qtr: _qtr,
-			year: _year,
-			product: _product
-		}
-	})
-	.then((res) => {
-		return res.data;
-	})
-	.catch((err) => {
-		throw new Error(err.response.data);
-	});
+	if (_qtr !== 5) {
+		return axios.get(`${config.api.server}/api/dates`, {
+			params: {
+				qtr: _qtr,
+				year: _year,
+				product: _product
+			}
+		})
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => {
+			throw new Error(err.response.data);
+		});
+	} else {
+		return axios.get(`${config.api.server}/api/holidays`, {
+			params: {
+				year: _year,
+				product: _product
+			}
+		})
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => {
+			throw new Error(err.response.data);
+		});
+	}
 };
 
 export const getQtr = (month) => {

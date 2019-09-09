@@ -131,18 +131,32 @@ class AppContainer extends Component {
 	// Adds to selected_dates state, updates dates
 	selectOpenDate(dateID) {
 		const _userID = this.props.userID;
-		const _designation = this.props.designation;
+		const _designation = this.props.designation || "TSE";
 		const _dateID = dateID;
-		api.addUser(_userID, _designation, _dateID)
-			.then((res) => {
-				this.setState({
-					selected_dates: [...this.state.selected_dates, res]
-				}, () => this.updateDates());
-			})
-			.catch((err) => {
-				this.triggerAlert('danger', err.message, 'Error!');
-				console.error(err);
-			});
+		if (this.state.qtr !== 5) {
+			api.addUser(_userID, _designation, _dateID)
+				.then((res) => {
+					this.setState({
+						selected_dates: [...this.state.selected_dates, res]
+					}, () => this.updateDates());
+				})
+				.catch((err) => {
+					this.triggerAlert('danger', err.message, 'Error!');
+					console.error(err);
+				});
+		}
+		else {
+			api.addHolidayUser(_userID, _designation, _dateID)
+				.then((res) => {
+					this.setState({
+						selected_dates: [...this.state.selected_dates, res]
+					}, () => this.updateDates());
+				})
+				.catch((err) => {
+					this.triggerAlert('danger', err.message, 'Error!');
+					console.error(err);
+				});
+		}
 	}
 
 
@@ -153,18 +167,41 @@ class AppContainer extends Component {
 	removeSelectedDate(dateID) {
 		const _userID = this.props.userID;
 		const _dateID = dateID;
-		api.deleteUser(_userID, _dateID)
-			.then((res) => {
-				var sArray = [...this.state.selected_dates];
-				sArray = sArray.filter(obj => obj._id !== _dateID);
-				this.setState({
-					selected_dates: sArray
-				}, () => this.updateDates());
-			})
-			.catch((err) => {
-				this.triggerAlert('danger', err.message, 'Error!');
-				console.error(err);
-			});
+		if(this.state.qtr !== 5) {
+			api.deleteUser(_userID, _dateID)
+				.then((res) => {
+					let sArray = [...this.state.selected_dates];
+					let idx = sArray.findIndex((date) => date._id === _dateID);
+					if (idx !== -1) {
+						sArray.splice(idx, 1);
+					}
+					this.setState({
+						selected_dates: sArray
+					}, () => this.updateDates());
+				})
+				.catch((err) => {
+					this.triggerAlert('danger', err.message, 'Error!');
+					console.error(err);
+				});
+		}
+		else {
+			api.deleteHolidayUser(_userID, _dateID)
+				.then((res) => {
+					let sArray = [...this.state.selected_dates];
+					let idx = sArray.findIndex((date) => date._id === _dateID);
+					if (idx !== -1) {
+						sArray.splice(idx, 1);
+					}
+					this.setState({
+						selected_dates: sArray
+					}, () => this.updateDates());
+				})
+				.catch((err) => {
+					this.triggerAlert('danger', err.message, 'Error!');
+					console.error(err);
+				});
+
+		}
 	}
 
 	// Confirm selected date
@@ -173,7 +210,11 @@ class AppContainer extends Component {
 	confirmSelectedDate(dateID) {
 		const _dateID = dateID;
 		let sArray = [...this.state.selected_dates];
-		sArray = sArray.filter(obj => obj._id !== _dateID);
+		//sArray = sArray.filter(obj => obj._id !== _dateID); // Fails for duplicate days
+		let idx = sArray.findIndex((date) => date._id === _dateID);
+		if (idx !== -1) {
+			sArray.splice(idx, 1);
+		}
 		this.setState({
 			selected_dates: sArray
 		}, () => this.updateDates());
@@ -201,16 +242,30 @@ class AppContainer extends Component {
 	removeUser(username, dateID) {
 		api.findUser(username)
 			.then((usr) => {
-				api.deleteUser(usr._id, dateID)
-					.then((res) => {
-						this.triggerAlert('success', `User deleted from ${res.date}`, "User Deleted");
-						let sArray = [...this.state.selected_dates];
-						sArray = sArray.filter(obj => obj._id !== dateID);
-						this.setState({
-							selected_dates: sArray
-						}, () => this.updateDates());
-					})
-					.catch(err => console.error(err));
+				if(this.state.qtr !== 5) {
+					api.deleteUser(usr._id, dateID)
+						.then((res) => {
+							this.triggerAlert('success', `User deleted from ${res.date}`, "User Deleted");
+							let sArray = [...this.state.selected_dates];
+							sArray = sArray.filter(obj => obj._id !== dateID);
+							this.setState({
+								selected_dates: sArray
+							}, () => this.updateDates());
+						})
+						.catch(err => console.error(err));
+				} 
+				else {
+					api.deleteHolidayUser(usr._id, dateID)
+						.then((res) => {
+							this.triggerAlert('success', `User deleted from ${res.date}`, "User Deleted");
+							let sArray = [...this.state.selected_dates];
+							sArray = sArray.filter(obj => obj._id !== dateID);
+							this.setState({
+								selected_dates: sArray
+							}, () => this.updateDates());
+						})
+						.catch(err => console.error(err));
+				}
 			})
 			.catch((err) => {
 				this.triggerAlert('danger', err.message, 'Error!');
@@ -219,42 +274,76 @@ class AppContainer extends Component {
 	};
 
 
+// Function to change a user on specific date.
+// Ugly function, needs rewrite.
 	changeUser(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
 		const _currentUsr = data.get('current_user');
 		const _newUsr = data.get('new_user');
 		const _dateID = data.get('dateID');
-		const _designation = this.props.designation;
+		const _designation = this.props.designation || "TSE";
 		api.findUser(_currentUsr)
 			.then((usr) => {
-				api.deleteUser(usr._id, _dateID)
-					.then((res) => {
-						api.findUser(_newUsr)
-							.then((newusr) => {
-								api.addUser(newusr._id, _designation, _dateID)
-									.then((res) => {
-										this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
-										let sArray = [...this.state.selected_dates];
-										sArray = sArray.filter(obj => obj._id !== _dateID);
-										this.setState({
-											selected_dates: sArray
-										}, () => this.updateDates());
-									})
-									.catch((err) => {
-										this.triggerAlert('danger', err.message, 'Error!');
-										console.error(err);
-									});
-							})
-							.catch((err) => {
-								this.triggerAlert('danger', err.message, 'Error!');
-								console.error(err);
-							});
-					})
-					.catch((err) => {
-						this.triggerAlert('danger', err.message, 'Error!');
-						console.error(err);
-					});
+				if(this.state.qtr !== 5) {
+					api.deleteUser(usr._id, _dateID)
+						.then((res) => {
+							api.findUser(_newUsr)
+								.then((newusr) => {
+									api.addUser(newusr._id, _designation, _dateID)
+										.then((res) => {
+											this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
+											let sArray = [...this.state.selected_dates];
+											sArray = sArray.filter(obj => obj._id !== _dateID);
+											this.setState({
+												selected_dates: sArray
+											}, () => this.updateDates());
+										})
+										.catch((err) => {
+											this.triggerAlert('danger', err.message, 'Error!');
+											console.error(err);
+										});
+								})
+								.catch((err) => {
+									this.triggerAlert('danger', err.message, 'Error!');
+									console.error(err);
+								});
+						})
+						.catch((err) => {
+							this.triggerAlert('danger', err.message, 'Error!');
+							console.error(err);
+						});
+				}
+				else {
+					api.deleteHolidayUser(usr._id, _dateID)
+						.then((res) => {
+							api.findUser(_newUsr)
+								.then((newusr) => {
+									api.addHolidayUser(newusr._id, _designation, _dateID)
+										.then((res) => {
+											this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
+											let sArray = [...this.state.selected_dates];
+											sArray = sArray.filter(obj => obj._id !== _dateID);
+											this.setState({
+												selected_dates: sArray
+											}, () => this.updateDates());
+										})
+										.catch((err) => {
+											this.triggerAlert('danger', err.message, 'Error!');
+											console.error(err);
+										});
+								})
+								.catch((err) => {
+									this.triggerAlert('danger', err.message, 'Error!');
+									console.error(err);
+								});
+						})
+						.catch((err) => {
+							this.triggerAlert('danger', err.message, 'Error!');
+							console.error(err);
+						});
+				}
+				
 			})
 			.catch((err) => {
 				this.triggerAlert('danger', err.message, 'Error!');

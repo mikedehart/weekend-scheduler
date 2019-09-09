@@ -51,11 +51,13 @@ class MainTable extends Component {
 				    <tr>
 				      <th>Date</th>
 				      <th>Day</th>
+				      {this.state.qtr === 5 ? <th>Holiday</th> : null}
 				      <th>Shift One</th>
 				      <th>Shift Two</th>
 				    </tr>
 				  </thead>
-				  <TableBody dates={this.state.dates} 
+				  <TableBody dates={this.state.dates}
+				  			isHoliday={this.state.qtr === 5}
 				  			selectDate={this.props.selectDate} 
 				  			designation={this.props.designation}
 				  			removeUser={this.props.removeUser}

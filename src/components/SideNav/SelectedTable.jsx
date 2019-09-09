@@ -11,9 +11,9 @@ const SelectedTable = (props) => (
 	<Table className="selection_tbl" striped bordered condensed>
 			<thead><tr><td colSpan="4">Selected</td></tr></thead>
 		<tbody>
-			{props.selectedDates.map((date) => 
+			{props.selectedDates.map((date, idx) => 
 				<SelectedRow 
-					key={date.dateid}
+					key={date.dateid + idx}
 					date={date.date}
 					product={date.product}
 					dateid={date._id}

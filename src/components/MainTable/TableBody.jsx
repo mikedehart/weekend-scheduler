@@ -16,6 +16,8 @@ const TableBody = (props) =>
 			users={date.users}
 			selectDate={props.selectDate}
 			designation={props.designation}
+			isHoliday={props.isHoliday}
+			desc={date.desc}
 			// Admin functions
 			removeUser={props.removeUser}
 			changeUser={props.changeUser}
@@ -27,6 +29,7 @@ TableBody.propTypes = {
 	dates: PropTypes.array.isRequired,
 	designation: PropTypes.string.isRequired,
 	selectDate: PropTypes.func.isRequired,
+	isHoliday: PropTypes.bool.isRequired,
 	// Admin functions
 	removeUser: PropTypes.func,
 	changeUser: PropTypes.func
