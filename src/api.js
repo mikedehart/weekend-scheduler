@@ -283,6 +283,21 @@ export const deleteAltDay = (altday_id) => {
 		})
 };
 
+export const getSpecificAltDay = (_userId, _dateId) => {
+	return axios.get(`${config.api.server}/api/altdays`, {
+		params: {
+			userId: _userId,
+			dateId: _dateId
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+}
+
 
 
 // Example of including the authorization header for token

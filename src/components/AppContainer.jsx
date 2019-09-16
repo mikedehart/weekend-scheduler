@@ -222,7 +222,6 @@ class AppContainer extends Component {
 					}, () => this.updateDates());
 					// User removed, remove associated alt-day
 					let _altDay = this.state.altDays.filter((alt) => alt.date === res.date);
-					console.log(_altDay[0].id);
 					if (_altDay.length > 0) {
 						api.deleteAltDay(_altDay[0].id)
 							.then((res) => {
@@ -279,17 +278,44 @@ class AppContainer extends Component {
 	// ----------- Admin Functions -------------
 
 	removeUser(username, dateID) {
+		let uID, dID = dateID;
 		api.findUser(username)
 			.then((usr) => {
+				uID = usr._id;
 				if(this.state.qtr !== 5) {
 					api.deleteUser(usr._id, dateID)
 						.then((res) => {
+							console.log('deleteinfo: ', res);
 							this.triggerAlert('success', `User deleted from ${res.date}`, "User Deleted");
 							let sArray = [...this.state.selected_dates];
 							sArray = sArray.filter(obj => obj._id !== dateID);
 							this.setState({
 								selected_dates: sArray
 							}, () => this.updateDates());
+							// User removed, remove associated alt-day
+							console.log("IDS: ", uID, dID);
+							api.getSpecificAltDay(uID, dID)
+								.then((res) => {
+									//TODO: finish removing alt day
+									console.log(res);
+									console.log("stuff: ", res.length, res[0]._id);
+								})
+								.catch((err) => {
+									this.triggerAlert('danger', err.message, 'Error!');
+									console.error(err);
+								})
+							// if (_altDay.length > 0) {
+							// 	api.deleteAltDay(_altDay[0].id)
+							// 		.then((res) => {
+							// 			this.triggerAlert('success', `Date Removed. Alternative date removed.`, "Date Removed");
+							// 			this.getUserAltDays();
+							// 		})
+							// 		.catch((err) => {
+							// 			this.triggerAlert('danger', err.message, 'Error!');
+							// 			console.error(err);
+							// 		})
+							// }
+
 						})
 						.catch(err => console.error(err));
 				} 
@@ -302,6 +328,8 @@ class AppContainer extends Component {
 							this.setState({
 								selected_dates: sArray
 							}, () => this.updateDates());
+
+							//TODO finish removing altday
 						})
 						.catch(err => console.error(err));
 				}
@@ -315,6 +343,7 @@ class AppContainer extends Component {
 
 // Function to change a user on specific date.
 // Ugly function, needs rewrite.
+// TODO remove/add altday when user changed.
 	changeUser(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
