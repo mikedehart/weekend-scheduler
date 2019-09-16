@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Table } from 'react-bootstrap';
+
 import '../../scss/main.scss';
-import * as api from '../../api';
 
 import { 
 	Modal, 
@@ -12,11 +13,13 @@ import {
 	HelpBlock  
 		} from 'react-bootstrap';
 
-const details = () => {
-	api.getUser().then((details) => {
-		details;
-	}).catch(err => console.error(err));
-};
+import AltdayBody from './AltdayBody';
+
+// const details = () => {
+// 	api.getUser().then((details) => {
+// 		details;
+// 	}).catch(err => console.error(err));
+// };
 
 const ModalBody = (props) => {
 	if (!props.authenticated) {
@@ -25,7 +28,6 @@ const ModalBody = (props) => {
 			<p className="newuser_msg">
 				It looks like your SAP ID isn't registered in our system. Please create an account below to use this site.
 			</p>
-
 				{props.inum ? 
 					<FormGroup controlId="newuser_input">
 						<ControlLabel>I-Number:</ControlLabel>
@@ -34,9 +36,9 @@ const ModalBody = (props) => {
 						<HelpBlock>I-Number must be 7 characters, and begin with I, C, or D followed by 6 numbers.</HelpBlock>
 					</FormGroup>
 					: 
-					<FormGroup controlId="newuser_input" validationState={props.validateINum(props.value)}>
+					<FormGroup controlId="newuser_input" validationState={props.validateINum(props.inum_value)}>
 						<ControlLabel>I-Number:</ControlLabel>
-						<FormControl type="text" name="inumber" value={props.value} placeholder="Enter I-Number" onChange={props.handleChange} />
+						<FormControl type="text" name="inumber" value={props.inum_value} placeholder="Enter I-Number" onChange={props.handleChange} />
 						<FormControl.Feedback />
 						<HelpBlock>I-Number must be 7 characters, and begin with I, C, or D followed by 6 numbers.</HelpBlock>
 					</FormGroup>
@@ -63,13 +65,25 @@ const ModalBody = (props) => {
 		</form>);
 	} else {
 		//TODO: Getting user details not working
-		console.log(props.getUserDetails());
 		return (
 			<Modal.Body>
-			<h4>User Details</h4>
-			<p>Username: <span>{props.username}</span></p>
-			<p>Details: <span>{props.getUserDetails()}</span></p>
-		</Modal.Body>
+				<h4>Alternative Days</h4>
+				{props.altDays.map((alt) => {
+					return (
+						<AltdayBody
+							key={alt.id}
+							id={alt.id}
+							date={alt.date}
+							user={alt.user}
+							alt={alt.alt}
+							qtr={alt.qtr}
+							year={alt.year}
+							updateUserAltDay={props.updateUserAltDay}
+						/>
+
+					);
+				})}
+			</Modal.Body>
 		);
 	}
 
@@ -82,8 +96,9 @@ ModalBody.propTypes = {
 	handleChange: PropTypes.func,
 	handleSubmit: PropTypes.func,
 	validateINum: PropTypes.func,
-	value: PropTypes.string,
-	getUserDetails: PropTypes.func
+	inum_value: PropTypes.string,
+	altDays: PropTypes.array,
+	updateUserAltDay: PropTypes.func.isRequired
 };
 
 export default ModalBody;

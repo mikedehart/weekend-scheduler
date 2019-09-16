@@ -5,12 +5,7 @@ import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import config from '../config/config';
 import * as api from '../api';
 
-//import {aseVals, iqVals, repVals} from '../data/schedule.js';
-//import { testUser } from '../data/users.js';
-
-import Header from './Header';
 import SideNav from './SideNav';
-import InfoPanel from './InfoPanel';
 import MainTable from './MainTable';
 import TopNav from './TopNav';
 import AlertStruct from './AlertStruct';
@@ -31,6 +26,8 @@ class AppContainer extends Component {
 		this.removeUser = this.removeUser.bind(this);
 		this.changeUser = this.changeUser.bind(this);
 		this.toggleLockQtr = this.toggleLockQtr.bind(this);
+		this.getUserAltDays = this.getUserAltDays.bind(this);
+		this.updateUserAltDay = this.updateUserAltDay.bind(this);
 
 		// Current date to set initial view
 		const d = new Date();
@@ -50,19 +47,10 @@ class AppContainer extends Component {
 			dates: [],
 			selected_dates: [],
 			assigned_dates: [],
-			qtrList: []
+			qtrList: [],
+			altDays: []
 		};
 	}
-
-	getUserDetails = () => {
-		api.getUser().then((details) => {
-			console.log(details);
-			return details;
-		}).catch((err) => {
-			this.triggerAlert('danger', err.message, 'Error!');
-			console.error(err);
-		});
-	};
 
 	// ----- Schedule Functions -----
 
@@ -139,6 +127,19 @@ class AppContainer extends Component {
 					this.setState({
 						selected_dates: [...this.state.selected_dates, res]
 					}, () => this.updateDates());
+					//add altday either here or at confirmation
+					let _userID = this.props.userID,
+						_qtr = this.state.qtr,
+						_year = this.state.year;
+					api.addAltDay(dateID, _userID, _qtr, _year)
+						.then((res) => {
+							this.triggerAlert('success', `Alternative date added for ${res.userId.username}.`, "Alt Day Added");
+							console.log(res);
+						})
+						.catch((err) => {
+							this.triggerAlert('danger', err.message, 'Error!');
+							console.error(err);
+						});
 				})
 				.catch((err) => {
 					this.triggerAlert('danger', err.message, 'Error!');
@@ -367,6 +368,10 @@ class AppContainer extends Component {
 
 	};
 
+
+	// Used for both locking and unlocking of qtrs based on data submitted
+	// Passed to TopNav
+
 	toggleLockQtr(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -387,6 +392,58 @@ class AppContainer extends Component {
 			})
 	}
 
+	// ------------ Alternative Day / User Detail functions ----------
+	/// Passed to ModalStruct
+
+	getUserDetails = () => {
+			api.getUser().then((details) => {
+				console.log(details);
+				return details;
+			}).catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			});
+		};
+
+	getUserAltDays() {
+	let _userid = this.props.userID;
+	api.getUserAltDays(_userid)
+		.then((res) => {
+			let altArray = [];
+			if (res.length !== 0) {
+				altArray = res.map((day) => {
+					return new Object({ id: day._id, date: day.dateId.date, user: day.userId.username, qtr: day.qtr, year: day.year, alt: day.alternative });
+				})
+			}
+			this.setState({
+				altDays: altArray
+			});
+		})
+		.catch((err) => {
+			console.error(err);
+			return err;
+		})
+
+	}
+
+	updateUserAltDay(evt) {
+		evt.preventDefault();
+		const data = new FormData(evt.target);
+		let altdaysId = data.get('altID');
+		let dateVal = data.get('dateVal');
+		api.updateAltDay(altdaysId, dateVal)
+			.then((res) => {
+				this.triggerAlert('success', `Alt day added: ${res.alternative}`, 'Alt Day Added');
+				this.getUserAltDays();
+			})
+			.catch((err) => {
+				console.error(err);
+				return err;
+			})
+
+	}
+
+
 
 
 	// ------- Component-specific Functions -------
@@ -401,13 +458,18 @@ class AppContainer extends Component {
 
 
 	componentWillMount() {
-		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
-		this.getDates(this.state.qtr, this.state.year, this.state.product);
-		this.getQtrs();
+		// this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
+		// this.getDates(this.state.qtr, this.state.year, this.state.product);
+		// this.getQtrs();
+		// this.getUserAltDays();
 
 	}
 
 	componentDidMount() {
+		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
+		this.getDates(this.state.qtr, this.state.year, this.state.product);
+		this.getQtrs();
+		this.getUserAltDays();
 		// const d = new Date();
 		// const yr = d.getFullYear();
 		// const qtr = api.getQtr(d.getMonth());
@@ -436,9 +498,10 @@ class AppContainer extends Component {
 								inum={this.props.inum}
 								changeProd={this.changeProd}
 								qtrList={this.state.qtrList}
-								getUserDetails={this.getUserDetails}
 								designation={this.props.designation}
 								toggleLockQtr={this.toggleLockQtr}
+								altDays={this.state.altDays}
+								updateUserAltDay={this.updateUserAltDay}
 							/>
 						</div>
 							<AlertStruct 
