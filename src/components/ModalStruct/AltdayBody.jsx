@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 
 // Calendar extras
 import AddToCal from 'react-add-to-calendar';
+import moment from 'moment';
 
 import '../../scss/main.scss';
 import '../../scss/table.scss';
@@ -19,8 +20,9 @@ class AltdayBody extends React.Component {
 		this.state = {
 			altDate: new Date(),
 			altString: '',
-			emailObj: {}
 		};
+		// List Google cal or Outlook for saving calendar details
+		this.listItems = [{ outlook: 'Outlook' }, { google: 'Google '}];
 	}
 
 	handleChange = (date) => {
@@ -32,22 +34,29 @@ class AltdayBody extends React.Component {
 	};
 
 
+	setEmail = () => {
+		if(this.props.alt || this.state.altString !== '') {
+			const d = (this.props.alt) ? new Date(this.props.alt).toISOString() : new Date(this.state.altString).toISOString();
+			let _startTime = moment(d).hour(7).minute(0);
+			let _endTime = moment(d).hour(7).minute(15);
+
+			let email = {
+				title: `Alt day for ${this.props.user}`,
+				description: `[Remember to add your manager!] Alternative day for weekend/holiday: ${this.props.date}`,
+				location: 'Boston, MA',
+				startTime: _startTime.toISOString(),
+				endTime: _endTime.toISOString()
+			}
+			return email;
+	}
+}
+
+	componentDidMount() {
+
+	}
 
 
 	render() {
-		if(this.props.alt) {
-			let email = {
-				title: `Alt day for ${this.props.user}`,
-				description: `[Remember to CC your manager!]\nAlternative day for weekend/holiday: ${this.props.date}`,
-				location: 'Boston, MA',
-				startTime: this.props.alt, 
-				endTIme: this.props.alt
-			}
-			// this.setState({
-			// 	emailObj:
-
-			// })
-		}
 		return (
 			<div>
 				<Table className="alt_table" size="sm">
@@ -64,7 +73,7 @@ class AltdayBody extends React.Component {
 								<form type="post" onSubmit={this.props.updateUserAltDay}>
 									<FormControl type="hidden" readOnly name="altID" value={this.props.id} />
 									<FormControl type="hidden" readOnly name="dateVal" value={this.state.altString} />
-									{(!this.props.alt) ? <Button type="submit">Submit</Button> : <Button type="submit" disabled>Submit</Button>}
+									{(!this.props.alt) ? <Button type="submit">Submit</Button> : <AddToCal buttonClassClosed="btn btn-default" buttonClassOpen="btn btn-default" dropdownClass="cal-class" event={this.setEmail()} listItems={this.listItems} displayItemIcons={false}  />}
 								</form>
 							</td>
 						</tr>
@@ -89,16 +98,30 @@ AltdayBody.propTypes = {
 export default AltdayBody;
 
 
-// return (
-// 			<div>
-// 				<form>
-// 					<Table>
-// 						<tbody>
-// 							<tr><td>{this.props.date}</td>
-// 							<td><DatePicker selected={this.state.altDate} onChange={this.handleChange} /></td>
-// 							<td><Button type="submit">Submit</Button></td></tr>
-// 						</tbody>
-// 					</Table>
-// 				</form>
-// 			</div>
-// 		);
+/****** Old function for using state in email gen. Better to just return it.
+		Left here in-case there is a use-case for moving back to state ********/
+// setEmail = () => {
+// 		if(this.props.alt || this.state.altString !== '') {
+// 			const d = (this.props.alt) ? new Date(this.props.alt).toISOString() : new Date(this.state.altString).toISOString();
+// 			let _startTime = moment(d).hour(7).minute(0);
+// 			let _endTime = moment(d).hour(7).minute(15);
+
+// 			let email = {
+// 				title: `Alt day for ${this.props.user}`,
+// 				description: `[Remember to add your manager!] Alternative day for weekend/holiday: ${this.props.date}`,
+// 				location: 'Boston, MA',
+// 				startTime: _startTime.toISOString(),
+// 				endTime: _endTime.toISOString()
+// 			},
+// 			listItems = [
+// 				{ outlook: 'Outlook' },
+// 				{ google: 'Google '}
+// 			];
+
+// 			console.log(email);
+// 			this.setState({
+// 				emailObj: email,
+// 				listItems: listItems
+// 			});
+// 		}
+// 	};
