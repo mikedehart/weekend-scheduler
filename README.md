@@ -8,7 +8,7 @@
 	- Sign up for shifts with single click
 	- Tracking for user shifts and alt days
 	- Scheduling of alt days
-	- Ability to switch shifts (?)
+	- Ability to switch shifts (TBD)
 
 ## Installation:
 

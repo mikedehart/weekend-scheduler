@@ -72,7 +72,7 @@ class TopNav extends Component {
 			<Navbar collapseOnSelect>
 			  <Navbar.Header>
 			    <Navbar.Brand>
-			      <a href="#home">Weeknd Scheduler</a>
+			      <a href="#home">Weekend Scheduler</a>
 			    </Navbar.Brand>
 			    <Navbar.Toggle />
 			  </Navbar.Header>
@@ -99,8 +99,9 @@ class TopNav extends Component {
 				  		authenticated={this.props.authenticated}
 				  		username={this.props.username}
 				  		inum={this.props.inum}
+				  		altDays={this.props.altDays}
 				  		handleRedirect={this.props.handleRedirect}
-				  		getUserDetails={this.props.getUserDetails}
+				  		updateUserAltDay={this.props.updateUserAltDay}
 				  	/>
 				  </div>
 			  </Navbar.Collapse>
@@ -118,10 +119,11 @@ TopNav.propTypes = {
 	inum: PropTypes.string.isRequired,
 	designation: PropTypes.string.isRequired,
 	qtrList: PropTypes.array.isRequired,
+	altDays: PropTypes.array.isRequired,
 	handleRedirect: PropTypes.func,
 	changeProd: PropTypes.func,
-	getUserDetails: PropTypes.func,
-	toggleLockQtr: PropTypes.func
+	toggleLockQtr: PropTypes.func,
+	updateUserAltDay: PropTypes.func
 };
 
 export default TopNav;

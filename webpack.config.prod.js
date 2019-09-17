@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const BUILD_DIR = path.resolve(__dirname, './dist');
 const APP_DIR = path.resolve(__dirname, './src');
@@ -45,6 +46,7 @@ const config = {
   },
   plugins: [
     new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new MomentLocalesPlugin(),
     new UglifyJsPlugin({
       sourceMap: false,
       uglifyOptions: {

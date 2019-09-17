@@ -43,7 +43,7 @@ class ModalStruct extends React.Component {
 			inum_val: '',
 			error: false,
 			msg: '',
-			submitted: false
+			submitted: false,
 		};
 		this.api = api;
 		this.auth = auth;
@@ -129,7 +129,6 @@ class ModalStruct extends React.Component {
 		}, 2000);
 	}
 
-
 	render() {
 		let isError = this.state.error;
 		let isSuccess = this.state.submitted;
@@ -165,11 +164,12 @@ class ModalStruct extends React.Component {
 							authenticated={this.props.authenticated} 
 							username={this.props.username} 
 							inum={this.props.inum}
+							altDays={this.props.altDays}
 							handleSubmit={this.handleSubmit}
 							validateINum={this.validateINum}
-							value={this.state.inum_val}
+							inum_value={this.state.inum_val}
 							handleChange={this.handleChange}
-							getUserDetails={this.props.getUserDetails}
+							updateUserAltDay={this.props.updateUserAltDay}
 						/>
 					</Modal.Body>
 					<Modal.Footer>
@@ -186,7 +186,8 @@ ModalStruct.propTypes = {
 	username: PropTypes.string.isRequired,
 	inum: PropTypes.string.isRequired,
 	handleRedirect: PropTypes.func,
-	getUserDetails: PropTypes.func
+	altDays: PropTypes.array.isRequired,
+	updateUserAltDay: PropTypes.func.isRequired
 };
 
 export default ModalStruct;

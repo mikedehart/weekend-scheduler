@@ -7,16 +7,6 @@ import * as api from '../../api';
 
 import UserStruct from '../UserStruct';
 
-// const popover = (
-// 	<Popover id="popover-positioned-bottom" title="User Actions">
-// 		<div>
-// 			<h5 onClick={this.props.removeUser}>Delete User</h5>
-// 			<h5>Change User</h5>
-// 		</div>
-// 	</Popover>
-// );
-//TODO: Test out "TSM" designation. Also, find a way to add TSM users via app?
-
 
 class TableCell extends React.Component {
 	constructor(props) {

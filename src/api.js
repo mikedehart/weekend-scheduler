@@ -221,7 +221,7 @@ export const getAllQtrs = () => {
 
 export const toggleLockQtr = (qtr_id, lock_bool) => {
 	return axios.put(`${config.api.server}/api/quarters/${qtr_id}`, {
-		locked: lock_bool
+			locked: lock_bool
 		})
 		.then((res) => {
 			return res.data;
@@ -230,6 +230,76 @@ export const toggleLockQtr = (qtr_id, lock_bool) => {
 			throw new Error(err.response.data);
 		})
 };
+
+
+// ======== Alt-Day functions ========
+
+export const getUserAltDays = (user_id) => {
+	return axios.get(`${config.api.server}/api/altdays`, {
+		params: {
+			userId: user_id
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+};
+
+export const addAltDay = (date_id, user_id, qtr, yr) => {
+	return axios.post(`${config.api.server}/api/altdays`, {
+		dateId: date_id,
+		userId: user_id,
+		qtr: qtr,
+		year: yr
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+};
+
+export const updateAltDay = (alt_id, altdate) => {
+	return axios.put(`${config.api.server}/api/altdays/${alt_id}`, {
+		alternative: altdate
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+};
+
+export const deleteAltDay = (altday_id) => {
+	return axios.delete(`${config.api.server}/api/altdays/${altday_id}`)
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => {
+			throw new Error(err.response.data);
+		})
+};
+
+export const getSpecificAltDay = (_userId, _dateId) => {
+	return axios.get(`${config.api.server}/api/altdays`, {
+		params: {
+			userId: _userId,
+			dateId: _dateId
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+}
+
 
 
 // Example of including the authorization header for token

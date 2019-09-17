@@ -67,3 +67,18 @@ a.list-group-item {
 p.navbar-text.navbar-right {
 	margin-bottom: 0;
 }
+
+/**********************
+Changes to add-calendar
+***********************/
+
+.cal-class {
+	list-style: none;
+
+}
+
+.cal-class li {
+	list-style: none;
+	margin: 1px;
+	margin-left: -20px;
+}

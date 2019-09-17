@@ -5,7 +5,7 @@ import { Modal } from 'react-bootstrap';
 
 const ModalHeader = (props) => {
 	if (props.authenticated) {		 
-			return <Modal.Title>User Details</Modal.Title>;
+			return <Modal.Title>Details: {props.username}</Modal.Title>;
 	} else {
 			return <Modal.Title>Create An Account</Modal.Title>;
 	}

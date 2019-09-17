@@ -5,12 +5,7 @@ import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import config from '../config/config';
 import * as api from '../api';
 
-//import {aseVals, iqVals, repVals} from '../data/schedule.js';
-//import { testUser } from '../data/users.js';
-
-import Header from './Header';
 import SideNav from './SideNav';
-import InfoPanel from './InfoPanel';
 import MainTable from './MainTable';
 import TopNav from './TopNav';
 import AlertStruct from './AlertStruct';
@@ -31,6 +26,10 @@ class AppContainer extends Component {
 		this.removeUser = this.removeUser.bind(this);
 		this.changeUser = this.changeUser.bind(this);
 		this.toggleLockQtr = this.toggleLockQtr.bind(this);
+		this.getUserAltDays = this.getUserAltDays.bind(this);
+		this.updateUserAltDay = this.updateUserAltDay.bind(this);
+		//this.deleteUserAltDay = this.deleteUserAltDay.bind(this);
+		//this.deleteSpecificAltDay = this.deleteSpecificAltDay.bind(this);
 
 		// Current date to set initial view
 		const d = new Date();
@@ -50,19 +49,10 @@ class AppContainer extends Component {
 			dates: [],
 			selected_dates: [],
 			assigned_dates: [],
-			qtrList: []
+			qtrList: [],
+			altDays: []
 		};
 	}
-
-	getUserDetails = () => {
-		api.getUser().then((details) => {
-			console.log(details);
-			return details;
-		}).catch((err) => {
-			this.triggerAlert('danger', err.message, 'Error!');
-			console.error(err);
-		});
-	};
 
 	// ----- Schedule Functions -----
 
@@ -139,6 +129,18 @@ class AppContainer extends Component {
 					this.setState({
 						selected_dates: [...this.state.selected_dates, res]
 					}, () => this.updateDates());
+					let _userID = this.props.userID,
+						_qtr = this.state.qtr,
+						_year = this.state.year;
+					api.addAltDay(dateID, _userID, _qtr, _year)
+						.then((res) => {
+							this.triggerAlert('success', `Date added. Alternative date added.`, "Date Added");
+							this.getUserAltDays();
+						})
+						.catch((err) => {
+							this.triggerAlert('danger', err.message, 'Error!');
+							console.error(err);
+						});
 				})
 				.catch((err) => {
 					this.triggerAlert('danger', err.message, 'Error!');
@@ -151,6 +153,18 @@ class AppContainer extends Component {
 					this.setState({
 						selected_dates: [...this.state.selected_dates, res]
 					}, () => this.updateDates());
+					let _userID = this.props.userID,
+						_qtr = this.state.qtr,
+						_year = this.state.year;
+					api.addAltDay(dateID, _userID, _qtr, _year)
+						.then((res) => {
+							this.triggerAlert('success', `Holiday added. Alternative date added.`, "Date Added");
+							this.getUserAltDays();
+						})
+						.catch((err) => {
+							this.triggerAlert('danger', err.message, 'Error!');
+							console.error(err);
+						});
 				})
 				.catch((err) => {
 					this.triggerAlert('danger', err.message, 'Error!');
@@ -178,6 +192,20 @@ class AppContainer extends Component {
 					this.setState({
 						selected_dates: sArray
 					}, () => this.updateDates());
+					// User removed, remove associated alt-day
+					let _altDay = this.state.altDays.filter((alt) => alt.date === res.date);
+					if (_altDay.length > 0) {
+						const altID = _altDay[0].id;
+						this.deleteUserAltDay(altID)
+							.then((res) => {
+								this.triggerAlert('success', `Date Removed. Alternative date removed.`, "Date Removed");
+								this.getUserAltDays();
+							})
+							.catch((err) => {
+								this.triggerAlert('danger', err.message, 'Error!');
+								console.error(err);
+							});
+					}
 				})
 				.catch((err) => {
 					this.triggerAlert('danger', err.message, 'Error!');
@@ -195,6 +223,21 @@ class AppContainer extends Component {
 					this.setState({
 						selected_dates: sArray
 					}, () => this.updateDates());
+					// User removed, remove associated alt-day
+					// User removed, remove associated alt-day
+					let _altDay = this.state.altDays.filter((alt) => alt.date === res.date);
+					if (_altDay.length > 0) {
+						const altID = _altDay[0].id;
+						this.deleteUserAltDay(altID)
+							.then((res) => {
+								this.triggerAlert('success', `Holiday Removed. Alternative date removed.`, "Holiday Removed");
+								this.getUserAltDays();
+							})
+							.catch((err) => {
+								this.triggerAlert('danger', err.message, 'Error!');
+								console.error(err);
+							});
+					}
 				})
 				.catch((err) => {
 					this.triggerAlert('danger', err.message, 'Error!');
@@ -240,17 +283,35 @@ class AppContainer extends Component {
 	// ----------- Admin Functions -------------
 
 	removeUser(username, dateID) {
+		let uID, dID = dateID;
 		api.findUser(username)
 			.then((usr) => {
+				uID = usr._id;
 				if(this.state.qtr !== 5) {
 					api.deleteUser(usr._id, dateID)
 						.then((res) => {
-							this.triggerAlert('success', `User deleted from ${res.date}`, "User Deleted");
+							console.log('deleteinfo: ', res);
+							
 							let sArray = [...this.state.selected_dates];
 							sArray = sArray.filter(obj => obj._id !== dateID);
 							this.setState({
 								selected_dates: sArray
 							}, () => this.updateDates());
+							// User removed, remove associated alt-day
+							console.log("IDS: ", uID, dID);
+							this.deleteSpecificAltDay(uID, dID)
+								.then((res) => {
+									console.log("result after delete: ", res);
+									if(!res) {
+										this.triggerAlert('warning', `User deleted from date. No AltDay found!`, "User Deleted");
+									} else {
+										this.triggerAlert('success', `User deleted from date. AltDay deleted.`, "User Deleted");
+									}
+								})
+								.catch((err) => {
+									this.triggerAlert('danger', err.message, 'Error!');
+									console.error(err);
+								})
 						})
 						.catch(err => console.error(err));
 				} 
@@ -263,6 +324,20 @@ class AppContainer extends Component {
 							this.setState({
 								selected_dates: sArray
 							}, () => this.updateDates());
+							// removing altday
+							this.deleteSpecificAltDay(uID, dID)
+								.then((res) => {
+									console.log("result after delete: ", res);
+									if(!res) {
+										this.triggerAlert('warning', `User deleted from date. No AltDay found!`, "User Deleted");
+									} else {
+										this.triggerAlert('success', `User deleted from date. AltDay deleted.`, "User Deleted");
+									}
+								})
+								.catch((err) => {
+									this.triggerAlert('danger', err.message, 'Error!');
+									console.error(err);
+								})
 						})
 						.catch(err => console.error(err));
 				}
@@ -276,6 +351,7 @@ class AppContainer extends Component {
 
 // Function to change a user on specific date.
 // Ugly function, needs rewrite.
+// TODO remove/add altday when user changed.
 	changeUser(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -283,13 +359,16 @@ class AppContainer extends Component {
 		const _newUsr = data.get('new_user');
 		const _dateID = data.get('dateID');
 		const _designation = this.props.designation || "TSE";
+		let currentID, newID;
 		api.findUser(_currentUsr)
 			.then((usr) => {
+				currentID = usr._id;
 				if(this.state.qtr !== 5) {
 					api.deleteUser(usr._id, _dateID)
 						.then((res) => {
 							api.findUser(_newUsr)
 								.then((newusr) => {
+									newID = newusr._id;
 									api.addUser(newusr._id, _designation, _dateID)
 										.then((res) => {
 											this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
@@ -298,6 +377,24 @@ class AppContainer extends Component {
 											this.setState({
 												selected_dates: sArray
 											}, () => this.updateDates());
+											this.deleteSpecificAltDay(currentID, _dateID)
+												.then((res) => {
+													console.log("deletealt: ", res);
+													api.addAltDay(_dateID, newID, this.state.qtr, this.state.year)
+														.then((res) => {
+															console.log("addalt: ", res);
+															this.triggerAlert('success', `User changed, altday changed.`, "User Changed");
+
+														})
+														.catch((err) => {
+															this.triggerAlert('danger', err.message, 'Error!');
+															console.error(err);
+														})
+												})
+												.catch((err) => {
+													this.triggerAlert('danger', err.message, 'Error!');
+													console.error(err);
+												})
 										})
 										.catch((err) => {
 											this.triggerAlert('danger', err.message, 'Error!');
@@ -319,14 +416,25 @@ class AppContainer extends Component {
 						.then((res) => {
 							api.findUser(_newUsr)
 								.then((newusr) => {
-									api.addHolidayUser(newusr._id, _designation, _dateID)
-										.then((res) => {
-											this.triggerAlert('success', `User changed for ${res.date}`, "User Changed");
-											let sArray = [...this.state.selected_dates];
-											sArray = sArray.filter(obj => obj._id !== _dateID);
-											this.setState({
-												selected_dates: sArray
-											}, () => this.updateDates());
+									newID = newusr._id;
+									this.deleteSpecificAltDay(currentID, _dateID)
+											.then((res) => {
+												console.log("deletealt: ", res);
+												api.addAltDay(_dateID, newID, this.state.qtr, this.state.year)
+													.then((res) => {
+														console.log("addalt: ", res);
+														this.triggerAlert('success', `User changed, altday changed.`, "User Changed");
+
+													})
+													.catch((err) => {
+														this.triggerAlert('danger', err.message, 'Error!');
+														console.error(err);
+													});
+											})
+											.catch((err) => {
+												this.triggerAlert('danger', err.message, 'Error!');
+												console.error(err);
+											});
 										})
 										.catch((err) => {
 											this.triggerAlert('danger', err.message, 'Error!');
@@ -337,11 +445,6 @@ class AppContainer extends Component {
 									this.triggerAlert('danger', err.message, 'Error!');
 									console.error(err);
 								});
-						})
-						.catch((err) => {
-							this.triggerAlert('danger', err.message, 'Error!');
-							console.error(err);
-						});
 				}
 				
 			})
@@ -367,6 +470,10 @@ class AppContainer extends Component {
 
 	};
 
+
+	// Used for both locking and unlocking of qtrs based on data submitted
+	// Passed to TopNav
+
 	toggleLockQtr(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -387,6 +494,107 @@ class AppContainer extends Component {
 			})
 	}
 
+	// ------------ Alternative Day / User Detail functions ----------
+	/// Passed to ModalStruct
+
+	getUserDetails = () => {
+			api.getUser().then((details) => {
+				console.log(details);
+				return details;
+			}).catch((err) => {
+				this.triggerAlert('danger', err.message, 'Error!');
+				console.error(err);
+			});
+		};
+
+	// Get all alt days associated with user
+	getUserAltDays() {
+	let _userid = this.props.userID;
+	console.log('in getaltdays');
+	api.getUserAltDays(_userid)
+		.then((res) => {
+			let altArray = [];
+			if (res.length !== 0) {
+				altArray = res.map((day) => {
+					return new Object({ id: day._id, date: day.dateId.date, user: day.userId.username, qtr: day.qtr, year: day.year, alt: day.alternative });
+				})
+			}
+			this.setState({
+				altDays: altArray
+			});
+		})
+		.catch((err) => {
+			console.error(err);
+			return err;
+		})
+
+	}
+
+	// Find altday by user / date IDs then delete
+	deleteSpecificAltDay(_userId, _dateId) {
+		let uID = _userId, dID = _dateId;
+		return new Promise(function(resolve, reject) {
+			api.getSpecificAltDay(uID, dID)
+				.then((res) => {
+					if(res.length > 0 && res[0]._id) {
+						const _id = res[0]._id;
+						api.deleteAltDay(_id)
+							.then((res) => {
+								resolve(res);
+							})
+							.catch((err) => {
+								console.log(err);
+								reject(err);
+							})
+
+					} else {
+						resolve(undefined);
+					}
+				})
+				.catch((err) => {
+					reject(err);
+				})
+		})
+	}
+
+	// Used by ModalStruct to add alt day for user
+	updateUserAltDay(evt) {
+		evt.preventDefault();
+		const data = new FormData(evt.target);
+		let altdaysId = data.get('altID');
+		let dateVal = data.get('dateVal');
+		api.updateAltDay(altdaysId, dateVal)
+			.then((res) => {
+				this.triggerAlert('success', `Alt day added: ${res.alternative}`, 'Alt Day Added');
+				this.getUserAltDays();
+			})
+			.catch((err) => {
+				console.error(err);
+				return err;
+			})
+
+	}
+
+	// Delete altday by ALT DAY ID
+	deleteUserAltDay(_altID) {
+		const altID = _altID;
+		return new Promise(function(resolve, reject) {
+			api.deleteAltDay(altID)
+				.then((res) => {
+					if(res) {
+						resolve(res);
+					} else {
+						reject();
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+					reject(err);
+				})
+		})
+	}
+
+
 
 
 	// ------- Component-specific Functions -------
@@ -401,13 +609,18 @@ class AppContainer extends Component {
 
 
 	componentWillMount() {
-		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
-		this.getDates(this.state.qtr, this.state.year, this.state.product);
-		this.getQtrs();
+		// this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
+		// this.getDates(this.state.qtr, this.state.year, this.state.product);
+		// this.getQtrs();
+		// this.getUserAltDays();
 
 	}
 
 	componentDidMount() {
+		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
+		this.getDates(this.state.qtr, this.state.year, this.state.product);
+		this.getQtrs();
+		this.getUserAltDays();
 		// const d = new Date();
 		// const yr = d.getFullYear();
 		// const qtr = api.getQtr(d.getMonth());
@@ -436,9 +649,10 @@ class AppContainer extends Component {
 								inum={this.props.inum}
 								changeProd={this.changeProd}
 								qtrList={this.state.qtrList}
-								getUserDetails={this.getUserDetails}
 								designation={this.props.designation}
 								toggleLockQtr={this.toggleLockQtr}
+								altDays={this.state.altDays}
+								updateUserAltDay={this.updateUserAltDay}
 							/>
 						</div>
 							<AlertStruct 
