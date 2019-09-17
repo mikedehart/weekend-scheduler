@@ -236,7 +236,9 @@ export const toggleLockQtr = (qtr_id, lock_bool) => {
 
 export const getUserAltDays = (user_id) => {
 	return axios.get(`${config.api.server}/api/altdays`, {
-		userId: user_id
+		params: {
+			userId: user_id
+		}
 	})
 	.then((res) => {
 		return res.data;
