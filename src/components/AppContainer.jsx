@@ -28,8 +28,6 @@ class AppContainer extends Component {
 		this.toggleLockQtr = this.toggleLockQtr.bind(this);
 		this.getUserAltDays = this.getUserAltDays.bind(this);
 		this.updateUserAltDay = this.updateUserAltDay.bind(this);
-		//this.deleteUserAltDay = this.deleteUserAltDay.bind(this);
-		//this.deleteSpecificAltDay = this.deleteSpecificAltDay.bind(this);
 
 		// Current date to set initial view
 		const d = new Date();
@@ -119,6 +117,7 @@ class AppContainer extends Component {
 	// - Run in TableCell
 	// Takes the dateID of the selected date
 	// Adds to selected_dates state, updates dates
+	// also adds corresponding alternative day
 	selectOpenDate(dateID) {
 		const _userID = this.props.userID;
 		const _designation = this.props.designation || "TSE";
@@ -129,13 +128,15 @@ class AppContainer extends Component {
 					this.setState({
 						selected_dates: [...this.state.selected_dates, res]
 					}, () => this.updateDates());
-					let _userID = this.props.userID,
-						_qtr = this.state.qtr,
+						let _qtr = this.state.qtr,
 						_year = this.state.year;
-					api.addAltDay(dateID, _userID, _qtr, _year)
+					api.addAltDay(_dateID, _userID, _qtr, _year)
 						.then((res) => {
 							this.triggerAlert('success', `Date added. Alternative date added.`, "Date Added");
-							this.getUserAltDays();
+							let newAlt = new Object({ id: res._id, date: res.dateId.date, user: res.userId.username, qtr: res.qtr, year: res.year, alt: res.alternative });
+							this.setState({
+								altDays: [...this.state.altDays, newAlt]
+							})
 						})
 						.catch((err) => {
 							this.triggerAlert('danger', err.message, 'Error!');
@@ -159,7 +160,10 @@ class AppContainer extends Component {
 					api.addAltDay(dateID, _userID, _qtr, _year)
 						.then((res) => {
 							this.triggerAlert('success', `Holiday added. Alternative date added.`, "Date Added");
-							this.getUserAltDays();
+							let newAlt = new Object({ id: res._id, date: res.dateId.date, user: res.userId.username, qtr: res.qtr, year: res.year, alt: res.alternative })
+							this.setState({
+								altDays: [...this.state.altDays, newAlt]
+							})
 						})
 						.catch((err) => {
 							this.triggerAlert('danger', err.message, 'Error!');
@@ -198,8 +202,16 @@ class AppContainer extends Component {
 						const altID = _altDay[0].id;
 						this.deleteUserAltDay(altID)
 							.then((res) => {
+								// Delete the alt day from the array
 								this.triggerAlert('success', `Date Removed. Alternative date removed.`, "Date Removed");
-								this.getUserAltDays();
+								let altArray = [...this.state.altDays];
+								let idx = altArray.findIndex((altday) => altday.id === res._id);
+								if(idx !== -1) {
+									altArray.splice(idx, 1);
+								}
+								this.setState({
+									altDays: altArray
+								})
 							})
 							.catch((err) => {
 								this.triggerAlert('danger', err.message, 'Error!');
@@ -224,14 +236,20 @@ class AppContainer extends Component {
 						selected_dates: sArray
 					}, () => this.updateDates());
 					// User removed, remove associated alt-day
-					// User removed, remove associated alt-day
 					let _altDay = this.state.altDays.filter((alt) => alt.date === res.date);
 					if (_altDay.length > 0) {
 						const altID = _altDay[0].id;
 						this.deleteUserAltDay(altID)
 							.then((res) => {
 								this.triggerAlert('success', `Holiday Removed. Alternative date removed.`, "Holiday Removed");
-								this.getUserAltDays();
+								let altArray = [...this.state.altDays];
+								let idx = altArray.findIndex((altday) => altday.id === res._id);
+								if(idx !== -1) {
+									altArray.splice(idx, 1);
+								}
+								this.setState({
+									altDays: altArray
+								})
 							})
 							.catch((err) => {
 								this.triggerAlert('danger', err.message, 'Error!');
@@ -565,8 +583,17 @@ class AppContainer extends Component {
 		let dateVal = data.get('dateVal');
 		api.updateAltDay(altdaysId, dateVal)
 			.then((res) => {
+				let altArray = [...this.state.altDays];
+				let idx = altArray.findIndex((alt) => alt.id === res._id);
+				console.log("id/array: ", idx, altArray);
+				if(idx > -1) {
+					altArray[idx].alt = res.alternative;
+				}
+				console.log('after adding alt: ', altArray);
+				this.setState({
+					altDays: altArray
+				})
 				this.triggerAlert('success', `Alt day added: ${res.alternative}`, 'Alt Day Added');
-				this.getUserAltDays();
 			})
 			.catch((err) => {
 				console.error(err);
