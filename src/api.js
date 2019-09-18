@@ -1,6 +1,13 @@
+
+/*****************************************
+*     REST API Functions
+*	Access to API goes through these functions
+*******************************************/
+
 import axios from 'axios';
 import * as auth from './auth';
 import config from './config/config';
+
 
 export const getUser = () => {
 	return axios.get(`${config.api.server}/api/users/details`, {
@@ -12,7 +19,10 @@ export const getUser = () => {
 	})
 };
 
-// TODO: Get dates user signed up for
+/*
+	Get dates user signed up for
+	based on userId
+*/
 export const getUserDates = (userID) => {
 	//return axios.
 	return axios.get(`${config.api.server}/api/dates/user`, {
@@ -31,7 +41,11 @@ export const getUserDates = (userID) => {
 };
 
 
-// TODO: Filter this by product?
+/*
+	Get all usernames in db
+	- Used by admin to change users
+	- TODO: Filter this by product?
+*/
 export const getAllUsernames = () => {
 	return axios.get(`${config.api.server}/api/users`)
 	.then((res) => {
@@ -44,9 +58,11 @@ export const getAllUsernames = () => {
 	});
 };
 
-// Find a user by username:
-// Currently, return all users and filter by username
-// Probably a better way to do this
+/*
+	Find a user by username
+	- Currently returns all users and filters for match
+	- TODO: Probably better way to do this for lots of users
+*/
 export const findUser = (username) => {
 	return axios.get(`${config.api.server}/api/users`)
 		.then((res) => {
@@ -60,10 +76,19 @@ export const findUser = (username) => {
 		});
 };
 
+/**********************************
+ *
+ *	Add / Remove User/Date Functions
+ *
+ *	- Used for manipulating date assignment
+ *
+ **********************************/
 
-// ==== Add / Remove user functions ====
 
-// Add user to the selected date
+/*
+	Add user to a date
+	- Used onClick() of table cells
+*/
 export const addUser = (userID, designation, dateID) => {
 	return axios.put(`${config.api.server}/api/dates/user/${dateID}`, {
 		id: userID,
@@ -78,6 +103,11 @@ export const addUser = (userID, designation, dateID) => {
 	})
 };
 
+
+/*
+	Same as above, for holiday table
+	- TODO: combine these into one function?
+*/
 export const addHolidayUser = (userID, designation, dateID) => {
 	return axios.put(`${config.api.server}/api/holidays/user/${dateID}`, {
 		id: userID,
@@ -92,9 +122,13 @@ export const addHolidayUser = (userID, designation, dateID) => {
 	})
 };
 
-// Remove user from selected date
-// NOTE: Need to use data for DELETE:
-// https://github.com/axios/axios/issues/897#issuecomment-343715381
+
+/*
+	Remove user from selected date
+	- Used to back-out by users or for admins
+	-NOTE: Need to use 'data' for DELETE: 
+		https://github.com/axios/axios/issues/897#issuecomment-343715381
+*/
 export const deleteUser = (userID, dateID) => {
 	return axios.delete(`${config.api.server}/api/dates/user/${dateID}`, {
 		data: {
@@ -110,6 +144,10 @@ export const deleteUser = (userID, dateID) => {
 	})
 };
 
+/*
+	Same as above, but for holiday dates
+	- TODO: combine these into one function?
+*/
 export const deleteHolidayUser = (userID, dateID) => {
 	return axios.delete(`${config.api.server}/api/holidays/user/${dateID}`, {
 		data: {
@@ -126,7 +164,18 @@ export const deleteHolidayUser = (userID, dateID) => {
 };
 
 
+/**********************************
+ *
+ *	User Functions
+ *
+ *	- Used to add/modify/delete users
+ *
+ **********************************/
 
+/*
+	Create user in the system
+	- Used when client creates a user
+*/
 export const createUser = (inum, username, product) => {
 	return axios.post(`${config.api.server}/api/users`, {
 		inum: inum,
@@ -143,8 +192,18 @@ export const createUser = (inum, username, product) => {
 };
 
 
-// ======== Date functions ========
+/**********************************
+ *
+ *	Date Functions
+ *
+ *	- Used for getting and changing dates
+ *
+ **********************************/
 
+/*
+	Get dates based on quarter/year
+	- If qtr===5 then its holiday calendar
+*/
 export const getQtrDates = (qtr, year, product) => {
 	const _qtr = parseInt(qtr, 10);
 	const _year = parseInt(year, 10);
@@ -179,6 +238,12 @@ export const getQtrDates = (qtr, year, product) => {
 	}
 };
 
+
+/*
+	Used to get relevant quarter
+	based on month.
+	- Mostly used in conjunction with Date() obj
+*/
 export const getQtr = (month) => {
 	let _month = parseInt(month, 10);
 	switch(_month) {
@@ -207,8 +272,18 @@ export const getQtr = (month) => {
 	}
 };
 
-// ======== Quarter functions ========
 
+/**********************************
+ *
+ *	Quarter Functions
+ *
+ *	- Used for REST calls on quarters table.
+ *
+ **********************************/
+
+/*
+	Get all quarters in the database
+*/
 export const getAllQtrs = () => {
 	return axios.get(`${config.api.server}/api/quarters`)
 		.then((res) => {
@@ -218,6 +293,11 @@ export const getAllQtrs = () => {
 			throw new Error(err.response.data);
 		})
 };
+
+/*
+	Lock/Unlock a quarter
+	- Only used by admins!
+*/
 
 export const toggleLockQtr = (qtr_id, lock_bool) => {
 	return axios.put(`${config.api.server}/api/quarters/${qtr_id}`, {
@@ -232,8 +312,18 @@ export const toggleLockQtr = (qtr_id, lock_bool) => {
 };
 
 
-// ======== Alt-Day functions ========
+/**********************************
+ *
+ *	Alt-Day Functions
+ *
+ *	- Used for REST calls on alternative days
+ *  - TODO: Try to move add/remove calls to backend?
+ *
+ **********************************/
 
+/*
+	Get alternative days for specific user
+*/
 export const getUserAltDays = (user_id) => {
 	return axios.get(`${config.api.server}/api/altdays`, {
 		params: {
@@ -248,6 +338,10 @@ export const getUserAltDays = (user_id) => {
 	})
 };
 
+/*
+	Add an alternative day
+	- Used when selecting a date
+*/
 export const addAltDay = (date_id, user_id, qtr, yr) => {
 	return axios.post(`${config.api.server}/api/altdays`, {
 		dateId: date_id,
@@ -263,6 +357,9 @@ export const addAltDay = (date_id, user_id, qtr, yr) => {
 	})
 };
 
+/*
+	Add 'alternative' date for altday
+*/
 export const updateAltDay = (alt_id, altdate) => {
 	return axios.put(`${config.api.server}/api/altdays/${alt_id}`, {
 		alternative: altdate
@@ -275,6 +372,10 @@ export const updateAltDay = (alt_id, altdate) => {
 	})
 };
 
+/*
+	Delete alt day.
+	- Used when user is removed from a date
+*/
 export const deleteAltDay = (altday_id) => {
 	return axios.delete(`${config.api.server}/api/altdays/${altday_id}`)
 		.then((res) => {
@@ -285,6 +386,10 @@ export const deleteAltDay = (altday_id) => {
 		})
 };
 
+/*
+	Get an alt day based on userId / dateId.
+	- Used when need to get altday and the ID is not available.
+*/
 export const getSpecificAltDay = (_userId, _dateId) => {
 	return axios.get(`${config.api.server}/api/altdays`, {
 		params: {
