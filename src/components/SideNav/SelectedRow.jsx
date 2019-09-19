@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../../scss/main.scss';
 
+import Timer from './Timer';
+import '../../scss/main.scss';
 
 const SelectedRow = (props) => (
 
@@ -18,6 +19,10 @@ const SelectedRow = (props) => (
 SelectedRow.propTypes = {
 
 }
-
-
+// TODO: Timer not working. When timer active, deleting a 'selected date'
+// actually deletes 2 rows instead of just selected row. Narrowed issue down to this timer component
+// <Timer 
+// 			confirmDate={props.confirmDate}
+// 			dateid={props.dateid}
+// 		/>
 export default SelectedRow;
