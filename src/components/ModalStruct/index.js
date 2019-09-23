@@ -66,14 +66,19 @@ class ModalStruct extends React.Component {
 	handleSubmit(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
-		const validate = this.finalValidation(data.get('inumber'), data.get('username'), data.get('product'));
+		const _inum = data.get('inumber'),
+			_username = data.get('username'),
+			_product = data.get('product'),
+			_email = data.get('email'),
+			_mgr = data.get('mgr_email');
+		const validate = this.finalValidation(_inum, _username, _product, _email, _mgr);
 		if(!validate[0]){
 			this.setState({
 				error: true,
 				msg: validate[1]
 			});
 		} else {
-			api.createUser(data.get('inumber'), data.get('username'), data.get('product'))
+			api.createUser(_inum, _username, _product, _email, _mgr)
 			.then((data) => {
 				this.setState({
 					submitted: true,
@@ -108,7 +113,7 @@ class ModalStruct extends React.Component {
 		else return 'success';
 	}
 
-	finalValidation(inumber, username, product) {
+	finalValidation(inumber, username, product, email, mgr) {
 		let valid = false;
 		let msg = '';
 		if(!inumber || this.validateINum(inumber) === 'error') {
@@ -117,6 +122,10 @@ class ModalStruct extends React.Component {
 			return [valid, 'Username blank or too long! Must be < 20 characters'];
 		} else if (!product) {
 			return [valid, 'Invalid product!'];
+		} else if (!email) {
+			return [valid, 'No Email provided!'];
+		} else if (!mgr){
+			return [valid, 'No Manager Email provided!'];
 		} else {
 			valid = true;
 			return [valid, 'Confirmed'];
@@ -126,7 +135,7 @@ class ModalStruct extends React.Component {
 	loginRedirect = () => {
 		setTimeout(() => {
 			this.props.handleRedirect();
-		}, 2000);
+		}, 1000);
 	}
 
 	render() {
@@ -146,7 +155,7 @@ class ModalStruct extends React.Component {
 						{isSuccess ? (
 							<AlertStruct 
 							status='success' 
-							message={"Redirecting in 2 seconds..."}
+							message={"Redirecting in 1 second..."}
 							header='User Added!' 
 							loginRedirect={this.loginRedirect} 
 							show={true} />

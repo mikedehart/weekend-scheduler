@@ -43,8 +43,6 @@ const ModalBody = (props) => {
 						<HelpBlock>I-Number must be 7 characters, and begin with I, C, or D followed by 6 numbers.</HelpBlock>
 					</FormGroup>
 				}
-
-
 			<FormGroup controlId="newuser_input">
 				<ControlLabel>Username:</ControlLabel>
 				<FormControl type="text" name="username" placeholder="Enter Username" />
@@ -61,6 +59,18 @@ const ModalBody = (props) => {
 				<FormControl.Feedback />
 				<HelpBlock>Product that you cover.</HelpBlock>
 			</FormGroup>
+			<FormGroup>
+				<ControlLabel>Email:</ControlLabel>
+				<FormControl type="text" name="email" placeholder="Email" />
+				<FormControl.Feedback />
+				<HelpBlock>Your SAP email (only used for generating calendar events.)</HelpBlock>
+			</FormGroup>
+			<FormGroup>
+				<ControlLabel>Manager Email:</ControlLabel>
+				<FormControl type="text" name="mgr_email" placeholder="Email" />
+				<FormControl.Feedback />
+				<HelpBlock>Your Manager's SAP email (only used for generating calendar events.)</HelpBlock>
+			</FormGroup>
 			<Button type="submit">Submit</Button>
 		</form>);
 	} else {
@@ -68,14 +78,16 @@ const ModalBody = (props) => {
 		return (
 			<Modal.Body>
 				<h4>Alternative Days</h4>
-				{props.altDays.map((alt) => {
+				{props.altDays.map((alt, idx) => {
 					return (
 						<AltdayBody
-							key={alt.id}
+							key={alt.id + idx}
 							id={alt.id}
 							date={alt.date}
 							user={alt.user}
 							alt={alt.alt}
+							email={alt.email}
+							mgr={alt.mgr}
 							qtr={alt.qtr}
 							year={alt.year}
 							updateUserAltDay={props.updateUserAltDay}

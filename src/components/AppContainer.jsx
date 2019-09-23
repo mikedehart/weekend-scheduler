@@ -126,6 +126,8 @@ class AppContainer extends Component {
 				.then((res) => {
 					// Result is json of 2 json docs: altday and newdate
 					let newAlt = new Object({ id: res.altday._id, date: res.altday.dateId.date, user: res.altday.userId.username, qtr: res.altday.qtr, year: res.altday.year, alt: res.altday.alternative });
+					// Add param to determine if holiday or not
+					res.newdate.holiday = false;
 					this.setState({
 						selected_dates: [...this.state.selected_dates, res.newdate],
 						altDays: [...this.state.altDays, newAlt]
@@ -142,6 +144,8 @@ class AppContainer extends Component {
 				.then((res) => {
 					// Result is json of 2 json docs: altday and newdate
 					let newAlt = new Object({ id: res.altday._id, date: res.altday.dateId.date, user: res.altday.userId.username, qtr: res.altday.qtr, year: res.altday.year, alt: res.altday.alternative });
+					// Add param to determine if holiday or not
+					res.newdate.holiday = true;
 					this.setState({
 						selected_dates: [...this.state.selected_dates, res.newdate],
 						altDays: [...this.state.altDays, newAlt]
@@ -160,10 +164,10 @@ class AppContainer extends Component {
 	// - Run in SelectedTable (SideNav)
 	// - Removes user from date and removes
 	// date obj from selected_dates state
-	removeSelectedDate(dateID) {
+	removeSelectedDate(dateID, isHoliday) {
 		const _userID = this.props.userID;
 		const _dateID = dateID;
-		if(this.state.qtr !== 5) {
+		if(!isHoliday) {
 			api.deleteUser(_userID, _dateID)
 				.then((res) => {
 					let sArray = [...this.state.selected_dates],
@@ -264,7 +268,7 @@ class AppContainer extends Component {
 				uID = usr._id;
 				if(this.state.qtr !== 5) {
 					api.deleteUser(usr._id, dateID)
-						.then((res) => {							
+						.then((res) => {						
 							let sArray = [...this.state.selected_dates],
 								altArray = [...this.state.altDays];
 							let sIdx = sArray.findIndex((date) => date._id === dID),
@@ -469,13 +473,21 @@ class AppContainer extends Component {
 	// Get all alt days associated with user
 	getUserAltDays() {
 	let _userid = this.props.userID;
-	console.log('in getaltdays');
 	api.getUserAltDays(_userid)
 		.then((res) => {
 			let altArray = [];
 			if (res.length !== 0) {
 				altArray = res.map((day) => {
-					return new Object({ id: day._id, date: day.dateId.date, user: day.userId.username, qtr: day.qtr, year: day.year, alt: day.alternative });
+					return new Object({ 
+						id: day._id, 
+						date: day.dateId.date, 
+						user: day.userId.username, 
+						email: day.userId.email,
+						mgr: day.userId.mgr_email,
+						qtr: day.qtr, 
+						year: day.year, 
+						alt: day.alternative 
+					});
 				})
 			}
 			this.setState({
@@ -522,6 +534,10 @@ class AppContainer extends Component {
 		const data = new FormData(evt.target);
 		let altdaysId = data.get('altID');
 		let dateVal = data.get('dateVal');
+		if(!altdaysId || !dateVal) {
+			this.triggerAlert('danger', 'No alt day selected!', 'Error adding alt day');
+			return;
+		}
 		api.updateAltDay(altdaysId, dateVal)
 			.then((res) => {
 				let altArray = [...this.state.altDays];
@@ -575,11 +591,8 @@ class AppContainer extends Component {
 
 
 	componentWillMount() {
-		// this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
-		// this.getDates(this.state.qtr, this.state.year, this.state.product);
-		// this.getQtrs();
-		// this.getUserAltDays();
-
+		// DO NOT USE
+		// Considered unsafe
 	}
 
 	componentDidMount() {
