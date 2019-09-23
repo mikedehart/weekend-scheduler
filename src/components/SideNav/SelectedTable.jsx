@@ -17,6 +17,7 @@ const SelectedTable = (props) => (
 					date={date.date}
 					product={date.product}
 					dateid={date._id}
+					isHoliday={date.holiday}
 					removeDate={props.removeDate}
 					confirmDate={props.confirmDate}
 				/>

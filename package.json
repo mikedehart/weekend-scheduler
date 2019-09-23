@@ -42,7 +42,6 @@
     "moment": "^2.24.0",
     "query-string": "^6.8.3",
     "react": "^16.9.0",
-    "react-add-to-calendar": "^0.1.5",
     "react-datepicker": "^2.9.6",
     "react-dom": "^16.9.0",
     "universal-style-loader": "^0.16.3"

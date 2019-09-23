@@ -176,11 +176,13 @@ export const deleteHolidayUser = (userID, dateID) => {
 	Create user in the system
 	- Used when client creates a user
 */
-export const createUser = (inum, username, product) => {
+export const createUser = (inum, username, product, email, mgr) => {
 	return axios.post(`${config.api.server}/api/users`, {
 		inum: inum,
 		username: username,
-		product: product
+		product: product,
+		email: email,
+		mgr_email: mgr
 	})
 	.then((res) => {
 		return res.data;
@@ -404,6 +406,54 @@ export const getSpecificAltDay = (_userId, _dateId) => {
 		throw new Error(err.response.data);
 	})
 }
+
+/** Currently not used. Calling URL directly in new window to prompt download
+	( see CalBuilder ) **/
+export const downloadiCal = (startTime, endTime, user, date, email, mgr, id) => {
+	return axios.get(`${config.api.server}/api/users/download`, {
+		params: {
+			start: startTime,
+			end: endTime,
+			user: user,
+			date: date,
+			email: email,
+			mgr: mgr,
+			id: id
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+};
+
+/*
+	Send data to API to write temp iCal file.
+	Filename returned. Can be downloaded at the filename link:
+	apiserver:port/api/users/download/filename.ics
+*/
+
+export const writeiCal = (startTime, endTime, user, date, email, mgr, id) => {
+	return axios.get(`${config.api.server}/api/users/write`, {
+		params: {
+			start: startTime,
+			end: endTime,
+			user: user,
+			date: date,
+			email: email,
+			mgr: mgr,
+			id: id
+		}
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+};
 
 
 
