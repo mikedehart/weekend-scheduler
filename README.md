@@ -1,10 +1,10 @@
-
 # Weekend Scheduler
 ### Author: Mike DeHart
 
 - Internal tool used to schedule weekend shifts
 - Covers:
-	- Admin panel to add/remove users
+	- Admin panel to add/remove users and lock/unlock new quarters
+	- User creation for new users
 	- Sign up for shifts with single click
 	- Tracking for user shifts and alt days
 	- Scheduling of alt days
