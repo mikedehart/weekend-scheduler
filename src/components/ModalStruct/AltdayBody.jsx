@@ -27,7 +27,6 @@ class AltdayBody extends React.Component {
 	}
 
 	handleChange = (date) => {
-		console.log(date);
 		if(!date || date === '') {
 			throw new Error('No date passed!');
 			this.setState({

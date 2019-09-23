@@ -21,9 +21,7 @@ export const getToken = () => {
 
 export const checkToken = () => {
 	const authToken = getToken();
-	console.log(`Token: ${authToken}`);
 	if (!authToken) {
-		console.log("Checking cookie...");
 		const newToken = getCookie('token');
 		if(!newToken) {
 			console.log('No token or cookie!');
