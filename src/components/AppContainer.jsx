@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 import config from '../config/config';
 import * as api from '../api';
