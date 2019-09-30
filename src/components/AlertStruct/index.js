@@ -3,33 +3,23 @@ import PropTypes from 'prop-types';
 import '../../scss/main.scss';
 import {Alert, Button} from 'react-bootstrap';
 
+/*******************************
+	Alert Structure
+	==========
+	- Displays alert when an error or success message is generated
+		for the user.
+	- Used by multiple components/functions
+
+********************************/
+
 class AlertStruct extends React.Component {
 	constructor(props) {
 		super(props);
-
-		// this.handleDismiss = this.handleDismiss.bind(this);
-		// this.handleShow = this.handleShow.bind(this);
 
 		this.state = {
 			show: this.props.show
 		};
 	}
-
-
-	// handle dismissal of the alert
-	// handleDismiss() {
-	// 	this.setState({
-	// 		show: false
-	// 	});
-	// 	if(this.props.handleErrorClose) this.props.handleErrorClose();
-	// }
-
-	// // show the alert
-	// handleShow() {
-	// 	this.setState({
-	// 		show: true
-	// 	});
-	// }
 
 	componentDidUpdate() {
 		if(this.props.show !== this.state.show){
