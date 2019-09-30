@@ -6,6 +6,14 @@ import { Table } from 'react-bootstrap';
 
 import SelectedTable from './SelectedTable';
 
+/*******************************
+	Side Navigation
+	=====================
+	- Handles left-hand side nav in UI
+		- Allows changing quarter/year
+		- Displays selected dates
+
+********************************/
 
 const SideNav = (props) => {
 	// get all qtrs that are unlocked

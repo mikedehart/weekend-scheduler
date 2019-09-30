@@ -15,11 +15,12 @@ import {
 
 import AltdayBody from './AltdayBody';
 
-// const details = () => {
-// 	api.getUser().then((details) => {
-// 		details;
-// 	}).catch(err => console.error(err));
-// };
+/*******************************
+	Modal Body
+	=====================
+	- Sets content in Modal
+
+********************************/
 
 const ModalBody = (props) => {
 	if (!props.authenticated) {

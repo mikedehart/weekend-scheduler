@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 
 import TableCell from './TableCell'
 
+/*******************************
+	Table Row
+	=====================
+	- Displays each date as a table row.
+	- Calls TableCell to handle adding/removing/changing users
+
+********************************/
+
 const TableRow = (props) =>
 			<tr>
 				<td>{props.date}</td>

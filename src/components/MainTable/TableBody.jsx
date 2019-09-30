@@ -4,6 +4,12 @@ import '../../scss/main.scss';
 
 import TableRow from './TableRow';
 
+/*******************************
+	Table Body
+	=====================
+	- maps rows to dates from database
+
+********************************/
 
 const TableBody = (props) =>
 	<tbody>

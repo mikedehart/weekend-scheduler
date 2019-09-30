@@ -10,6 +10,17 @@ import TopNav from './TopNav';
 import AlertStruct from './AlertStruct';
 import ModalStruct from './ModalStruct';
 
+/*******************************
+	Application Container
+	=====================
+	- This is the main parent component of
+	entire react frontend. State that affects
+	whole app is set and modified here.
+	- Initial user info is passed from index.js and used to set
+	state information for app.
+
+********************************/
+
 class AppContainer extends Component {
 
 	// Used to set initial state
@@ -50,17 +61,26 @@ class AppContainer extends Component {
 		};
 	}
 
-	// ----- Schedule Functions -----
+/**********************************
+ *
+ *	Schedule Functions
+ *
+ *	- Used to alter year/quarter/product in schedule
+ *
+ **********************************/
 
-	// Three functions below handle
-	// updating the calendar based on changes
-	// to quarter, year, or product.
+/*
+	Change quarters (used in Maintable)
+*/
 	changeQtr = (qtr) => {
 		this.setState({
 			qtr
 		});
 	};
 
+/*
+	Change year (used in Maintable)
+*/
 	changeYear = (evt) => {
 		this.setState({
 			year: parseInt(evt.target.value, 10),
@@ -68,6 +88,9 @@ class AppContainer extends Component {
 		});
 	};
 
+/*
+	Change product (used in Maintable)
+*/
 	changeProd = (key) => {
 		let prodValue = "ASE";
 		if (key === 3.2) prodValue = "IQ";
@@ -78,7 +101,9 @@ class AppContainer extends Component {
 	};
 
 
-
+/*
+	Refresh/update dates from database
+*/
 	updateDates() {
 		const _qtr = parseInt(this.state.qtr, 10);
 		const _year = parseInt(this.state.year, 10);
@@ -95,6 +120,10 @@ class AppContainer extends Component {
 			});
 	}
 
+/*
+	Get dates from the database
+*/
+
 	getDates = (qtr, year, product) => {
 		api.getQtrDates(qtr, year, product)
 			.then((dates) => {
@@ -109,13 +138,21 @@ class AppContainer extends Component {
 			});
 	};
 
-	// ----- Submit Functions -----
-
-	// Select an available date
-	// - Run in TableCell
-	// Takes the dateID of the selected date
-	// Adds to selected_dates state, updates dates
-	// also adds corresponding alternative day
+/**********************************
+ *
+ *	Submit Functions
+ *
+ *	- User functions to select/remove/confirm a selected date
+ *
+ **********************************/
+/*
+	Select open date cell
+		- Run in TableCell
+		- Takes dateID of selected date(mongo _id value)
+		- Once saved, adds date to selected_dates state array
+			and updates dates(corresponding alt day handled on backend)
+		- If user's current table view is qtr 5 (holiday qtr), add to holidays instead
+*/
 	selectOpenDate(dateID) {
 		const _userID = this.props.userID;
 		const _designation = this.props.designation || "TSE";
@@ -158,11 +195,15 @@ class AppContainer extends Component {
 		}
 	}
 
-
-	// Remove selected date (from sidebar)
-	// - Run in SelectedTable (SideNav)
-	// - Removes user from date and removes
-	// date obj from selected_dates state
+/*
+	Remove selected date
+		- When user clicks 'X' for selected date
+		- Removes user from date and deletes date from
+			selected_dates state.
+		- Alt day automatically removed on backend
+		- Runs in SelectedTable (SideNav)
+		- Works for holidays if isHoliday bool is true
+*/
 	removeSelectedDate(dateID, isHoliday) {
 		const _userID = this.props.userID;
 		const _dateID = dateID;
@@ -225,9 +266,13 @@ class AppContainer extends Component {
 		}
 	}
 
-	// Confirm selected date
-	// Since user already added, all we have to do it remove
-	// this row from the selected_list array.
+/*
+	Confirm selected date
+		- When user clicks check mark (need to change to timer)
+		- 'Confirms' already selected date.
+			- Since user already added, all this does is remove the date
+			from selected_dates. After which, no longer removable by the user
+*/
 	confirmSelectedDate(dateID) {
 		const _dateID = dateID;
 		let sArray = [...this.state.selected_dates];
@@ -241,12 +286,22 @@ class AppContainer extends Component {
 		}, () => { this.updateDates(); this.getUserAltDays() });
 	}
 
-	// --------- Modal Alert Functions -----------
 
-	// Trigger user notification through AlertStruct
-	// status: one of ['info', 'success', 'warning', 'danger']
-	// header: Title of the alert
-	// msg: Text of the message
+/**********************************
+ *
+ *	Alert Trigger
+ *
+ *	- Used to trigger 'alert' banner to users
+ *	- Used to show errors / success / info to users
+ *	- Used to send feedback to user from a LOT 
+ *		of user-facing components
+ *	- PARAMETERS:
+ *		alert_show: [true | false] - whether or not to show alert
+ *		alert_status: ['info' | 'success' | 'warning' | 'danger'] - changes display of alert
+ *		alert_header: [String] -  title of the alert
+ *		alter_msg: [String] - description to display in alert
+ *
+ **********************************/
 	triggerAlert = (status, msg, header) => {
 		this.setState({
 			alert_show: true,
@@ -256,10 +311,30 @@ class AppContainer extends Component {
 		});
 	};
 
+	handleAlertClose = () => {
+		this.setState({ alert_show: false });
+	};
+
+	handleAlertOpen = () => {
+		this.setState({ alert_show: true });
+	};
 
 
-	// ----------- Admin Functions -------------
+/**********************************
+ *
+ *	Admin Functions
+ *
+ *	- Used by admins to alert users / schedule 
+ *	- Generally these are triggered either in user overlay (see TableCell)
+ *		or in Admin console (see TopNav)
+ *
+ ***********************************/
 
+/*
+	Remove user from a date/holiday
+	- Since not tied to current user, need to
+		find the user first and use _id to remove from date
+*/
 	removeUser(username, dateID) {
 		let uID, dID = dateID;
 		api.findUser(username)
@@ -327,9 +402,14 @@ class AppContainer extends Component {
 			});
 	};
 
+/*
+	Change user assigned to date/holiday
+		- Ugly function, needs a re-write
+		- Currently has to find user, then delete user,
+			then find new user and add that user
+			- All use separate API calls (not great, move to backend?)
 
-// Function to change a user on specific date.
-// Ugly function, needs rewrite.
+*/
 	changeUser(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -415,8 +495,9 @@ class AppContainer extends Component {
 			});
 	};
 
-	// Qtr functions
-
+/*
+	Get all quarters and save to state
+*/
 	getQtrs() {
 		api.getAllQtrs()
 			.then((res) => {
@@ -431,10 +512,11 @@ class AppContainer extends Component {
 
 	};
 
-
-	// Used for both locking and unlocking of qtrs based on data submitted
-	// Passed to TopNav
-
+/*
+	Lock/Unlock a quarter
+		- Used for both locking/unlocking depending on data submitted
+		- Passed to TopNav
+*/
 	toggleLockQtr(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -455,20 +537,21 @@ class AppContainer extends Component {
 			})
 	}
 
-	// ------------ Alternative Day / User Detail functions ----------
-	/// Passed to ModalStruct
 
-	getUserDetails = () => {
-			api.getUser().then((details) => {
-				console.log(details);
-				return details;
-			}).catch((err) => {
-				this.triggerAlert('danger', err.message, 'Error!');
-				console.error(err);
-			});
-		};
+/**********************************
+ *
+ *	Alternative Day Functions
+ *
+ *	- Client able to schedule an alt day or take pager pay for
+ * 		each weekend date selected
+ *	- Adding/deleting alt days handled on the backend
+ *	- Allows users to submit/view alternative days
+ *
+ ***********************************/
 
-	// Get all alt days associated with user
+/*
+	Get all alt-days associated with current user
+*/
 	getUserAltDays() {
 	let _userid = this.props.userID;
 	api.getUserAltDays(_userid)
@@ -500,34 +583,13 @@ class AppContainer extends Component {
 
 	}
 
-	// Find altday by user / date IDs then delete
-	// deleteSpecificAltDay(_userId, _dateId) {
-	// 	let uID = _userId, dID = _dateId;
-	// 	return new Promise(function(resolve, reject) {
-	// 		api.getSpecificAltDay(uID, dID)
-	// 			.then((res) => {
-	// 				if(res.length > 0 && res[0]._id) {
-	// 					const _id = res[0]._id;
-	// 					api.deleteAltDay(_id)
-	// 						.then((res) => {
-	// 							resolve(res);
-	// 						})
-	// 						.catch((err) => {
-	// 							console.log(err);
-	// 							reject(err);
-	// 						})
-
-	// 				} else {
-	// 					resolve(undefined);
-	// 				}
-	// 			})
-	// 			.catch((err) => {
-	// 				reject(err);
-	// 			})
-	// 	})
-	// }
-
-	// Used by ModalStruct to add alt day for user
+/*
+	Update an alt day for user.
+		- Used by ModalStruct to select altday
+		- Can select either altday or pager pay
+			- If both or neither selected, throw error
+			- Needs to be EITHER alt date or pager pay (boolean)
+*/
 	updateUserAltDay(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -581,40 +643,13 @@ class AppContainer extends Component {
 		}
 	}
 
-	// Delete altday by ALT DAY ID
-	// deleteUserAltDay(_altID) {
-	// 	const altID = _altID;
-	// 	return new Promise(function(resolve, reject) {
-	// 		api.deleteAltDay(altID)
-	// 			.then((res) => {
-	// 				if(res) {
-	// 					resolve(res);
-	// 				} else {
-	// 					reject();
-	// 				}
-	// 			})
-	// 			.catch((err) => {
-	// 				console.log(err);
-	// 				reject(err);
-	// 			})
-	// 	})
-	// }
 
+/********************************
+	Component-specific Functions
 
+*********************************/
 
-
-	// ------- Component-specific Functions -------
-
-	handleAlertClose = () => {
-		this.setState({ alert_show: false });
-	};
-
-	handleAlertOpen = () => {
-		this.setState({ alert_show: true });
-	};
-
-
-	componentWillMount() {
+	UNSAFE_componentWillMount() {
 		// DO NOT USE
 		// Considered unsafe
 	}
@@ -624,12 +659,6 @@ class AppContainer extends Component {
 		this.getDates(this.state.qtr, this.state.year, this.state.product);
 		this.getQtrs();
 		this.getUserAltDays();
-		// const d = new Date();
-		// const yr = d.getFullYear();
-		// const qtr = api.getQtr(d.getMonth());
-		// this.getDates(this.state.qtr, this.state.year, this.state.product);
-		//this.removeUser("test", "5c0579b5d6a5bd53182361e1");
-		//console.log(api.getAllUsernames());
 	}
 
 	handleRedirect = () => {
@@ -637,7 +666,7 @@ class AppContainer extends Component {
 			window.location.replace(`${config.api.server}/auth/signin`);
 		}
 		else {
-			console.log('Window undefined!');
+			console.error('Window undefined!');
 		}
 	}
 

@@ -9,11 +9,13 @@ import {
 		Button
 		} from 'react-bootstrap';
 
-// Component Imports
-//import UserHeader from './UserHeader';
-//import UserBody from './UserBody';
+/*******************************
+	User Modal Display
+	=====================
+	- Used in admin overlay, allows admins to
+		change user for a specific cell (see TableCell)
 
-//TODO: add form for switching user
+********************************/
 const UserStruct = (props) => {
 	return (
 		<Modal backdrop="static" show={props.show} onHide={props.handleClose}>

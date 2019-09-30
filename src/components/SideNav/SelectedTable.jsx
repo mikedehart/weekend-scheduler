@@ -7,6 +7,14 @@ import * as api from '../../api';
 
 import SelectedRow from './SelectedRow';
 
+/*******************************
+	Selected Table
+	=====================
+	- Displays selected dates table in side nav
+	- selected_dates array mapped to individual rows
+
+********************************/
+
 const SelectedTable = (props) => (
 	<Table className="selection_tbl" striped bordered condensed>
 			<thead><tr><td colSpan="4">Selected</td></tr></thead>

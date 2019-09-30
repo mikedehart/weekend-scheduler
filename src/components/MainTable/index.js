@@ -7,6 +7,14 @@ import * as api from '../../api';
 
 import TableBody from './TableBody';
 
+/*******************************
+	Date Table
+	=====================
+	- Displays calendar dates to users
+	- One of the main components of the app
+
+********************************/
+
 class MainTable extends Component {
 	// Used to set initial state
 	constructor(props) {
