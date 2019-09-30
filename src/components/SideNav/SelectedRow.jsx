@@ -4,6 +4,16 @@ import PropTypes from 'prop-types';
 import Timer from './Timer';
 import '../../scss/main.scss';
 
+/*******************************
+	Selected Row
+	=====================
+	- Displays 'selected_dates' state as
+	invidual rows.
+	- Allows users to remove themselves
+	from a previously selected date (needs time limit)
+
+********************************/
+
 const SelectedRow = (props) => (
 
 	<tr>

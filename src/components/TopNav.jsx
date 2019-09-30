@@ -7,6 +7,15 @@ import AdminStruct from './AdminStruct';
 
 import * as api from '../api';
 
+/*******************************
+	Top Nav
+	=====================
+	- Handles/displays top nav bar in UI
+	- Allows changing products, admin panel (for admins only)
+	- Button to create user or select alt days
+
+********************************/
+
 
 class TopNav extends Component {
 	constructor(props) {

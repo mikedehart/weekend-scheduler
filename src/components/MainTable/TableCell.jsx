@@ -5,8 +5,18 @@ import { Popover, OverlayTrigger, Button } from 'react-bootstrap';
 
 import * as api from '../../api';
 
-import UserStruct from '../UserStruct';
+import UserStruct from './UserStruct';
 
+/*******************************
+	Table Cell
+	=====================
+	- User cells for each table
+	- Displays open for open dates, or username for
+	selected dates.
+	- Triggers an overlay for admins allowing to delete
+		or change an individual user
+
+********************************/
 
 class TableCell extends React.Component {
 	constructor(props) {
@@ -41,9 +51,6 @@ class TableCell extends React.Component {
 			})
 			.catch(err => console.error(err));
 	};
-
-
-	componentWillMount() {}
 
 	componentDidMount() {
 		this.getUsernames();
@@ -89,13 +96,6 @@ class TableCell extends React.Component {
 
 
 }
-
-// 	return (props.className === 'occupied_cell' ?
-// 		<td className={props.className}>{props.name}</td>
-// 		:
-// 		<td className={props.className} onClick={() => props.selectDate(props.dateID)}></td>
-// 		);
-// };
 
 
 TableCell.propTypes = {

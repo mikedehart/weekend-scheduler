@@ -13,6 +13,14 @@ import '../../scss/react-datepicker.min.css';
 
 import { Checkbox, Table, Button, FormControl } from 'react-bootstrap';
 
+/*******************************
+	Alternate Day Table Body
+	==========
+	- Builds table of all alternative days for current user
+	- Submits alt days to backend for saving
+
+********************************/
+
 
 class AltdayBody extends React.Component {
 	constructor(props) {

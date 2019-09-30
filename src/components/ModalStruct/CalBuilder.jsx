@@ -8,13 +8,14 @@ import '../../scss/main.scss';
 import * as api from '../../api';
 import config from '../../config/config';
 
-/***************
+/*******************************
 	CalBuilder
+	==========
 	- Builds iCal event based on alternative date information.
 	- iCal is built and saved in API /tmp folder.
 	- Then, open url to the file to download (window.open)
 
-****************/
+********************************/
 
 const CalBuilder = (props) => {
 

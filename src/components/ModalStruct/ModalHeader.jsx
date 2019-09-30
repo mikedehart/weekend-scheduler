@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Modal } from 'react-bootstrap';
 
+/*******************************
+	Modal Header
+	=====================
+	- Sets header for Modal
+
+********************************/
+
 const ModalHeader = (props) => {
 	if (props.authenticated) {		 
 			return <Modal.Title>Details: {props.username}</Modal.Title>;

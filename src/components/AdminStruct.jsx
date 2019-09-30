@@ -10,8 +10,13 @@ import {
 		Form
 		} from 'react-bootstrap';
 
+/*******************************
+	Admin Modal
+	=============
+	- When admin clicks 'Admin Console'
+		this modal is triggered
 
-
+********************************/
 
 const AdminStruct = (props) => {
 	const lockedQtrs = props.qtrList.filter(qtr => qtr.locked === true);

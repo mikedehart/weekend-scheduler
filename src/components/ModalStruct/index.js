@@ -22,6 +22,16 @@ import AlertStruct from '../AlertStruct';
 import * as api from '../../api';
 import * as auth from '../../auth';
 
+/*******************************
+	Main Modal Structure
+	=====================
+	- Triggered when user clicks the button in upper right.
+		- Displays create user (if no current user) or
+		alternative dates for current user
+
+********************************/
+
+
 function isNumeric(num) {
 	return !isNaN(parseFloat(num)) && isFinite(num);
 }
