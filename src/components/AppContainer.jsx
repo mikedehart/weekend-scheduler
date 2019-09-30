@@ -330,7 +330,6 @@ class AppContainer extends Component {
 
 // Function to change a user on specific date.
 // Ugly function, needs rewrite.
-// TODO remove/add altday when user changed.
 	changeUser(evt) {
 		evt.preventDefault();
 		const data = new FormData(evt.target);
@@ -483,6 +482,7 @@ class AppContainer extends Component {
 						user: day.userId.username, 
 						email: day.userId.email,
 						mgr: day.userId.mgr_email,
+						pay: day.pay,
 						qtr: day.qtr, 
 						year: day.year, 
 						alt: day.alternative 
@@ -533,27 +533,52 @@ class AppContainer extends Component {
 		const data = new FormData(evt.target);
 		let altdaysId = data.get('altID');
 		let dateVal = data.get('dateVal');
-		if(!altdaysId || !dateVal) {
-			this.triggerAlert('danger', 'No alt day selected!', 'Error adding alt day');
+		let pagerStr = data.get('pagerVal');
+		let pagerVal = (pagerStr === "true") ? true : false;
+		if(!altdaysId || (!dateVal && pagerVal === false)) {
+			this.triggerAlert('danger', 'No alt day / pager pay selected!', 'Error adding alt day');
+			return;
+		} else if(dateVal && pagerVal !== false) {
+			this.triggerAlert('danger', 'Alt day AND pay selected! Please select only a date or pager checkbox.', 'Error adding alt day');
 			return;
 		}
-		api.updateAltDay(altdaysId, dateVal)
-			.then((res) => {
-				let altArray = [...this.state.altDays];
-				let idx = altArray.findIndex((alt) => alt.id === res._id);
-				if(idx > -1) {
-					altArray[idx].alt = res.alternative;
-				}
-				this.setState({
-					altDays: altArray
+		if(dateVal) {
+			api.updateAltDay(altdaysId, dateVal)
+				.then((res) => {
+					let altArray = [...this.state.altDays];
+					let idx = altArray.findIndex((alt) => alt.id === res._id);
+					if(idx > -1) {
+						altArray[idx].alt = res.alternative;
+					}
+					this.setState({
+						altDays: altArray
+					})
+					this.triggerAlert('success', `Alt day added: ${res.alternative}`, 'Alt Day Added');
 				})
-				this.triggerAlert('success', `Alt day added: ${res.alternative}`, 'Alt Day Added');
-			})
-			.catch((err) => {
-				console.error(err);
-				return err;
-			})
+				.catch((err) => {
+					console.error(err);
+					return err;
+				});
+		} else {
+			api.updatePagerPay(altdaysId, pagerVal)
+				.then((res) => {
+					let altArray = [...this.state.altDays];
+					let idx = altArray.findIndex((alt) => alt.id === res._id);
+					if(idx > -1) {
+						altArray[idx].pay = res.pay;
+					}
+					this.setState({
+						altDays: altArray
+					})
+					this.triggerAlert('success', `Pager pay added: ${res.pay}`, 'Alt Day Added');
+				})
+				.catch((err) => {
+					console.error(err);
+					return err;
+				});
 
+
+		}
 	}
 
 	// Delete altday by ALT DAY ID

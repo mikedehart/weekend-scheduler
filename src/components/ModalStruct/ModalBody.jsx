@@ -86,6 +86,7 @@ const ModalBody = (props) => {
 							date={alt.date}
 							user={alt.user}
 							alt={alt.alt}
+							pay={alt.pay}
 							email={alt.email}
 							mgr={alt.mgr}
 							qtr={alt.qtr}

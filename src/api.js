@@ -375,6 +375,22 @@ export const updateAltDay = (alt_id, altdate) => {
 };
 
 /*
+	Add pager pay for altday
+*/
+export const updatePagerPay = (alt_id, pager) => {
+	return axios.put(`${config.api.server}/api/altdays/${alt_id}`, {
+		pay: pager
+	})
+	.then((res) => {
+		return res.data;
+	})
+	.catch((err) => {
+		throw new Error(err.response.data);
+	})
+};
+
+
+/*
 	Delete alt day.
 	- Used when user is removed from a date
 */
