@@ -39,7 +39,7 @@ const CalBuilder = (props) => {
 
 	// Return button. OnClick run the function above.
 	return (
-		<Button onClick={getDownload}>Save to Calendar</Button>
+		<Button onClick={getDownload}>iCal Event</Button>
 	);
 
 }

@@ -11,7 +11,7 @@ import '../../scss/main.scss';
 import '../../scss/table.scss';
 import '../../scss/react-datepicker.min.css';
 
-import { Table, Button, FormControl } from 'react-bootstrap';
+import { Checkbox, Table, Button, FormControl } from 'react-bootstrap';
 
 
 class AltdayBody extends React.Component {
@@ -21,9 +21,8 @@ class AltdayBody extends React.Component {
 		this.state = {
 			altDate: '',
 			altString: '',
+			pagerPay: this.props.pay
 		};
-		// List Google cal or Outlook for saving calendar details
-		this.listItems = [{ outlook: 'Outlook' }, { google: 'Google '}];
 	}
 
 	handleChange = (date) => {
@@ -40,9 +39,15 @@ class AltdayBody extends React.Component {
 		});
 	};
 
+	handleCheck = () => {
+		this.setState({
+			pagerPay: !this.state.pagerPay
+		});
+	};
+
 
 	setTimes = () => {
-		const d = new Date(this.props.alt);
+		const d = new Date(this.props.alt || this.props.date);
 		let _start = moment(d).hour(7).minute(0);
 		let _end = moment(d).hour(7).minute(15);
 		return new Object({
@@ -61,19 +66,19 @@ class AltdayBody extends React.Component {
 			<div>
 				<Table className="alt_table" size="sm">
 					<thead>
-						<tr className="alt_row"><th className="alt_head">Selected Date</th><th className="alt_head">Alt date</th><th> </th></tr>
+						<tr className="alt_row"><th className="alt_head">Selected Date</th><th className="alt_head">Alt date</th><th className="alt_head alt_head_pay">Pay</th></tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>{this.props.date}</td>
-							{(!this.props.alt) ? 
-								<td><DatePicker selected={this.state.altDate} onChange={this.handleChange} /></td>
-								: <td>{this.props.alt}</td>}
+								<td>{(this.props.alt) ? this.props.alt : ((this.props.pay) ? <DatePicker className="alt_datepicker" selected={this.state.altDate} disabled /> : <DatePicker className="alt_datepicker" selected={this.state.altDate} onChange={this.handleChange} />)}</td>
+								<td className="alt_pay">{(this.props.pay) ? <Checkbox checked disabled /> : ((this.props.alt) ? <Checkbox disabled /> : <Checkbox onChange={this.handleCheck} />)}</td>
 							<td>
 								<form type="post" onSubmit={this.props.updateUserAltDay}>
 									<FormControl type="hidden" readOnly name="altID" value={this.props.id} />
 									<FormControl type="hidden" readOnly name="dateVal" value={this.state.altString} />
-									{(!this.props.alt) ? 
+									<FormControl type="hidden" readOnly name="pagerVal" value={this.state.pagerPay} />
+									{(!this.props.alt && !this.props.pay) ? 
 										<Button type="submit">Submit</Button> : 
 										<CalBuilder
 											key={this.props.id}

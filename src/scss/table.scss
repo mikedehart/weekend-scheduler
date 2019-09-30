@@ -67,7 +67,20 @@ td.confirm_row:hover {
 // ----------------------
 
 .alt_table {
+	table-layout: fixed;
 	width: 100%;
+}
+
+.alt_table td {
+	width: 25%;
+}
+
+.alt_pay {
+	padding-left: 20px;
+}
+
+.alt_datepicker {
+	width: 80%;
 }
 
 tr.alt_row th {
@@ -75,6 +88,6 @@ tr.alt_row th {
 }
 
 .alt_head {
-	min-width: 179px;
+	margin: auto;
 	padding: 1px !important;
 }
