@@ -24,7 +24,6 @@ class TableCell extends React.Component {
 
 		this.showUserModal = this.showUserModal.bind(this);
 		this.hideUserModal = this.hideUserModal.bind(this);
-		this.getUsernames = this.getUsernames.bind(this);
 
 		this.state = {
 			show_modal: false,
@@ -33,27 +32,24 @@ class TableCell extends React.Component {
 	}
 
 	showUserModal() {
-		this.setState({ show_modal: true });
+		// As separate function, gets called EVERY time a cell is rendered.
+		// Now just get usernames when modal is loaded.
+		api.getAllUsernames()
+			.then((usrs) => {
+				const arr = Object.keys(usrs).map(x => usrs[x].username);
+				this.setState({
+					new_users: arr,
+					show_modal: true
+				});
+			})
+			.catch(err => console.error(err));
 	}
 
 	hideUserModal() {
 		this.setState({ show_modal: false });
 	}
 
-	//TODO: Filter by product?
-	getUsernames() {
-		api.getAllUsernames()
-			.then((usrs) => {
-				const arr = Object.keys(usrs).map(x => usrs[x].username);
-				this.setState({
-					new_users: arr
-				});
-			})
-			.catch(err => console.error(err));
-	};
-
 	componentDidMount() {
-		this.getUsernames();
 	}
 
 
