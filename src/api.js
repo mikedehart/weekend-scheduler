@@ -11,7 +11,7 @@ import config from './config/config';
 
 export const getUser = () => {
 	return axios.get(`${config.api.server}/api/users/details`, {
-		headers: { Authorization: 'Bearer ' + auth.getToken() }
+		headers: { authorization: 'Bearer ' + auth.getToken() }
 	}).then((res) => {
 		return res.data;
 	}).catch((err) => {
@@ -24,8 +24,10 @@ export const getUser = () => {
 	based on userId
 */
 export const getUserDates = (userID) => {
-	//return axios.
 	return axios.get(`${config.api.server}/api/dates/user`, {
+		headers: { 
+			authorization: 'Bearer ' + auth.getToken() 
+		},
 		params: {
 			id: userID
 		}
@@ -93,6 +95,9 @@ export const addUser = (userID, designation, dateID) => {
 	return axios.put(`${config.api.server}/api/dates/user/${dateID}`, {
 		id: userID,
 		designation: designation
+	}, 
+	{
+		headers: { authorization: 'Bearer ' + auth.getToken() },
 	})
 	.then((res) => {
 		return res.data;
@@ -112,6 +117,9 @@ export const addHolidayUser = (userID, designation, dateID) => {
 	return axios.put(`${config.api.server}/api/holidays/user/${dateID}`, {
 		id: userID,
 		designation: designation
+	}, 
+	{
+		headers: { authorization: 'Bearer ' + auth.getToken() },
 	})
 	.then((res) => {
 		return res.data;
@@ -131,6 +139,9 @@ export const addHolidayUser = (userID, designation, dateID) => {
 */
 export const deleteUser = (userID, dateID) => {
 	return axios.delete(`${config.api.server}/api/dates/user/${dateID}`, {
+		headers: { 
+			authorization: 'Bearer ' + auth.getToken() 
+		},
 		data: {
 			id: userID
 		}
@@ -150,6 +161,9 @@ export const deleteUser = (userID, dateID) => {
 */
 export const deleteHolidayUser = (userID, dateID) => {
 	return axios.delete(`${config.api.server}/api/holidays/user/${dateID}`, {
+		headers: { 
+			authorization: 'Bearer ' + auth.getToken() 
+		},
 		data: {
 			id: userID
 		}
@@ -304,6 +318,11 @@ export const getAllQtrs = () => {
 export const toggleLockQtr = (qtr_id, lock_bool) => {
 	return axios.put(`${config.api.server}/api/quarters/${qtr_id}`, {
 			locked: lock_bool
+		},
+		{
+			headers: {
+				authorization: 'Bearer ' + auth.getToken() 
+			}
 		})
 		.then((res) => {
 			return res.data;
@@ -341,23 +360,23 @@ export const getUserAltDays = (user_id) => {
 };
 
 /*
-	Add an alternative day
+	Add an alternative day (NOT USED. MOVED TO BACKEND)
 	- Used when selecting a date
 */
-export const addAltDay = (date_id, user_id, qtr, yr) => {
-	return axios.post(`${config.api.server}/api/altdays`, {
-		dateId: date_id,
-		userId: user_id,
-		qtr: qtr,
-		year: yr
-	})
-	.then((res) => {
-		return res.data;
-	})
-	.catch((err) => {
-		throw new Error(err.response.data);
-	})
-};
+// export const addAltDay = (date_id, user_id, qtr, yr) => {
+// 	return axios.post(`${config.api.server}/api/altdays`, {
+// 		dateId: date_id,
+// 		userId: user_id,
+// 		qtr: qtr,
+// 		year: yr
+// 	})
+// 	.then((res) => {
+// 		return res.data;
+// 	})
+// 	.catch((err) => {
+// 		throw new Error(err.response.data);
+// 	})
+// };
 
 /*
 	Add 'alternative' date for altday
@@ -391,18 +410,18 @@ export const updatePagerPay = (alt_id, pager) => {
 
 
 /*
-	Delete alt day.
+	Delete alt day. (NOT USED. MOVED TO BACKEND)
 	- Used when user is removed from a date
 */
-export const deleteAltDay = (altday_id) => {
-	return axios.delete(`${config.api.server}/api/altdays/${altday_id}`)
-		.then((res) => {
-			return res.data;
-		})
-		.catch((err) => {
-			throw new Error(err.response.data);
-		})
-};
+// export const deleteAltDay = (altday_id) => {
+// 	return axios.delete(`${config.api.server}/api/altdays/${altday_id}`)
+// 		.then((res) => {
+// 			return res.data;
+// 		})
+// 		.catch((err) => {
+// 			throw new Error(err.response.data);
+// 		})
+// };
 
 /*
 	Get an alt day based on userId / dateId.
@@ -425,25 +444,25 @@ export const getSpecificAltDay = (_userId, _dateId) => {
 
 /** Currently not used. Calling URL directly in new window to prompt download
 	( see CalBuilder ) **/
-export const downloadiCal = (startTime, endTime, user, date, email, mgr, id) => {
-	return axios.get(`${config.api.server}/api/users/download`, {
-		params: {
-			start: startTime,
-			end: endTime,
-			user: user,
-			date: date,
-			email: email,
-			mgr: mgr,
-			id: id
-		}
-	})
-	.then((res) => {
-		return res.data;
-	})
-	.catch((err) => {
-		throw new Error(err.response.data);
-	})
-};
+// export const downloadiCal = (startTime, endTime, user, date, email, mgr, id) => {
+// 	return axios.get(`${config.api.server}/api/users/download`, {
+// 		params: {
+// 			start: startTime,
+// 			end: endTime,
+// 			user: user,
+// 			date: date,
+// 			email: email,
+// 			mgr: mgr,
+// 			id: id
+// 		}
+// 	})
+// 	.then((res) => {
+// 		return res.data;
+// 	})
+// 	.catch((err) => {
+// 		throw new Error(err.response.data);
+// 	})
+// };
 
 /*
 	Send data to API to write temp iCal file.
