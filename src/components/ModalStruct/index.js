@@ -155,7 +155,7 @@ class ModalStruct extends React.Component {
 		return(
 			<div>
 				<Button bsStyle="primary" bsSize="small" onClick={this.handleShow}>
-					{this.state.username}
+					Alternate Days
 				</Button>
 				<Modal backdrop="static" show={this.state.show} onHide={this.handleClose}>
 					<Modal.Header closeButton>

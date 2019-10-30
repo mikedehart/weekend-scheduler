@@ -82,3 +82,32 @@ Changes to add-calendar
 	margin: 1px;
 	margin-left: -20px;
 }
+
+/************************
+Alt Day Notification
+*************************/
+
+.notification {
+	background-color: #555;
+	color: white;
+	text-decoration: none;
+	padding: 15px 26px;
+	position: relative;
+	display: inline-block;
+	border-radius: 2px;
+}
+
+.notification:hover {
+	background-color: red;
+}
+
+.badge {
+	background-color: red;
+	position: absolute;
+  	top: 2px;
+  	right: 1px;
+  	padding: 5px 10px;
+  	border-radius: 50%;
+  	background: red;
+  	color: white;
+}
