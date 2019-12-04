@@ -655,7 +655,7 @@ class AppContainer extends Component {
 	}
 
 	componentDidMount() {
-		this.triggerAlert('info', 'Weekend scheduler details here...', `Welcome ${this.props.username || 'New User'}!`);
+		this.triggerAlert('info', 'Click on a cell to select a date. Dates can be removed from the left-hand column. Alternative days can be accessed via the button in the upper right.', `Welcome ${this.props.username || 'New User'}!`);
 		this.getDates(this.state.qtr, this.state.year, this.state.product);
 		this.getQtrs();
 		this.getUserAltDays();

@@ -26,7 +26,7 @@ class TopNav extends Component {
 		this.toggleAdminHide = this.toggleAdminHide.bind(this);
 
 		this.state = {
-			adminShow: false
+			adminShow: false,
 		};
 
 		this.api = api;
@@ -67,7 +67,7 @@ class TopNav extends Component {
 		if(designation === 'TSM') {
 			return (
 				<NavItem eventKey={1} onClick={this.toggleAdminShow}>
-			      Admin Mode
+			      Quarters
 			    </NavItem>
 			);
 		} else {
@@ -75,6 +75,14 @@ class TopNav extends Component {
 		}
 	}
 
+	showBadge() {
+		let numDays = this.props.altDays.filter((val) => !val.alt && val.pay === false).length;
+		if(numDays > 0) {
+			return (<span className="badge">{numDays}</span>);
+		} else {
+			return ("");
+		}
+	}
 
 	render() {
 		return(
@@ -92,6 +100,9 @@ class TopNav extends Component {
 				      <MenuItem eventKey={3.2} onSelect={this.props.changeProd}>IQ</MenuItem>
 				      <MenuItem eventKey={3.3} onSelect={this.props.changeProd}>REP</MenuItem>
 				    </NavDropdown>
+				    <NavItem eventKey={2} href="#">
+				      The Tool
+				    </NavItem>
 				    {this.adminButton(this.props.designation)}
 				    <AdminStruct 
 				    	show={this.state.adminShow}
@@ -99,9 +110,6 @@ class TopNav extends Component {
 				    	toggleAdminHide={this.toggleAdminHide}
 				    	toggleLockQtr={this.props.toggleLockQtr}
 				    />
-				    <NavItem eventKey={2} href="#">
-				      Link
-				    </NavItem>
 				  </Nav>
 				  <div className="user_btn">
 				  	<ModalStruct 
@@ -112,6 +120,7 @@ class TopNav extends Component {
 				  		handleRedirect={this.props.handleRedirect}
 				  		updateUserAltDay={this.props.updateUserAltDay}
 				  	/>
+				  	{this.showBadge()}
 				  </div>
 			  </Navbar.Collapse>
 			</Navbar>
@@ -140,3 +149,5 @@ export default TopNav;
 
 // Throws warning
 // <Navbar.Text pullRight>{this.props.generateButton()}</Navbar.Text>
+
+//<span className="badge">{this.props.altDays.filter((val) => !val.alt && val.pay === false).length}</span>
