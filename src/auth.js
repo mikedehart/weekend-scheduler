@@ -34,6 +34,15 @@ export const checkToken = () => {
 	return true;
 };
 
+// Clear token, is cases of expiration
+export const deleteToken = () => {
+	if(typeof window !== 'undefined') {
+		return localStorage.removeItem('scheduler_token');
+	} else {
+		return false;
+	}
+};
+
 export const getINum = () => {
 	let inum = getCookie('inum');
 	setCookie('inum', '', -1);
