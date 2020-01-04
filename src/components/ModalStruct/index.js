@@ -151,11 +151,12 @@ class ModalStruct extends React.Component {
 	render() {
 		let isError = this.state.error;
 		let isSuccess = this.state.submitted;
+		let isLoggedIn = this.state.username;
 
 		return(
 			<div>
 				<Button bsStyle="primary" bsSize="small" onClick={this.handleShow}>
-					{this.props.username ? 'Alternative Days' : 'Create User'}
+					{isLoggedIn !== 'Create Account' ? 'Alternative Days' : 'Create Account'}
 				</Button>
 				<Modal backdrop="static" show={this.state.show} onHide={this.handleClose}>
 					<Modal.Header closeButton>

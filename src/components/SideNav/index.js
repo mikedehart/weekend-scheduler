@@ -29,7 +29,7 @@ const SideNav = (props) => {
 			<h3 className="product_header">{props.product}</h3>
 			<FormGroup controlId="formControlsSelect">
 			  <ControlLabel>Year</ControlLabel>
-			  <FormControl componentClass="select" defaultValue={props.year} onChange={props.changeYear}>
+			  <FormControl componentClass="select" value={props.year} onChange={props.changeYear}>
 			  	{distinctYears.map((yr, idx) => <option key={idx} value={yr}>{yr}</option>)}
 			  </FormControl>
 			</FormGroup>

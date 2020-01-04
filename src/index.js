@@ -27,11 +27,21 @@ if (auth.checkToken()) {
 			}
 		}
 	})
-	.catch(err => console.error(err));
-	
+	.catch(err => {
+		console.log(err.response.data);
+		console.log(err.response.status);
+		//If error code is 401, possibly faulty token. Delete and reload
+		if(err.response.status === 401) {
+			auth.deleteToken();
+			if(typeof window !== 'undefined') window.location.reload(true);
+		}
+		
+	});
 } else {
 	// No valid token set or in cookie. Check for inum cookie or redirect to auth
+	console.log("no token or cookie");
 	let inum = auth.getINum();
+	console.log("inum: ", inum);
 	if(!inum) {
 		if(typeof window !== 'undefined') {
 			window.location.replace(`${config.api.server}/auth/signin`);
