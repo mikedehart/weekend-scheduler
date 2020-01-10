@@ -171,8 +171,12 @@ class AppContainer extends Component {
 					this.triggerAlert('success', `Date added: ${res.newdate.date}. Alternative date added.`, "Date Added");
 				})
 				.catch((err) => {
-					this.triggerAlert('danger', err.message, 'Error!');
-					console.error(err);
+					if (!_userID) {
+						this.triggerAlert('danger', 'You must be signed in to select dates!', 'Error!');
+					} else {
+						this.triggerAlert('danger', err.message, 'Error!');
+					}
+					
 				});
 		}
 		else {
@@ -189,8 +193,11 @@ class AppContainer extends Component {
 					this.triggerAlert('success', `Date added: ${res.newdate.date}. Alternative date added.`, "Date Added");
 				})
 				.catch((err) => {
-					this.triggerAlert('danger', err.message, 'Error!');
-					console.error(err);
+					if (!_userID) {
+						this.triggerAlert('danger', 'You must be signed in to select dates!', 'Error!');
+					} else {
+						this.triggerAlert('danger', err.message, 'Error!');
+					}
 				});
 		}
 	}
