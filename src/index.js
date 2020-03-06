@@ -28,8 +28,8 @@ if (auth.checkToken()) {
 		}
 	})
 	.catch(err => {
-		console.log(err.response.data);
-		console.log(err.response.status);
+		console.log('data: ', err.response.data);
+		console.log('status: ', err.response.status);
 		//If error code is 401, possibly faulty token. Delete and reload
 		if(err.response.status === 401) {
 			auth.deleteToken();

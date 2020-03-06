@@ -47,7 +47,7 @@ export const getINum = () => {
 	let inum = getCookie('inum');
 	setCookie('inum', '', -1);
 	return inum;
-}
+};
 
 
 function setCookie(cname, cvalue, exdays) {

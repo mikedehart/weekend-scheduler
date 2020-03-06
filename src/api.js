@@ -8,7 +8,6 @@ import axios from 'axios';
 import * as auth from './auth';
 import config from './config/config';
 
-
 export const getUser = () => {
 	return axios.get(`${config.api.server}/api/users/details`, {
 		headers: { authorization: 'Bearer ' + auth.getToken() }
