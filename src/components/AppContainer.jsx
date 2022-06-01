@@ -95,6 +95,7 @@ class AppContainer extends Component {
 		let prodValue = "ASE";
 		if (key === 3.2) prodValue = "IQ";
 		else if (key === 3.3) prodValue = "REP";
+		else if (key === 3.4) prodValue = "Brazil";
 		this.setState({
 			product: prodValue
 		});

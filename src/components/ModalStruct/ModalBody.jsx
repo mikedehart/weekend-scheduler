@@ -56,6 +56,7 @@ const ModalBody = (props) => {
 					<option value="ASE">ASE</option>
 		 			<option value="IQ">IQ</option>
 		 			<option value="REP">REP</option>
+		 			<option value="Brazil">Brazil</option>
 				</FormControl>
 				<FormControl.Feedback />
 				<HelpBlock>Product that you cover.</HelpBlock>
