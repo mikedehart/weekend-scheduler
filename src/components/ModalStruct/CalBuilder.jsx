@@ -38,12 +38,15 @@ const CalBuilder = (props) => {
 			})
 		}
 
+		let btn_disabled = <p></p>;
+		let btn_active = <Button onClick={getDownload}>iCal</Button>;
+
 	// Return button. OnClick run the function above.
 	return (
-		<Button onClick={getDownload}>iCal Event</Button>
+		(props.pagerPay) ? btn_disabled : btn_active
 	);
 
-}
+};
 
 CalBuilder.propTypes = {
 	times: PropTypes.object.isRequired,
@@ -51,7 +54,8 @@ CalBuilder.propTypes = {
 	date: PropTypes.string.isRequired,
 	user: PropTypes.string.isRequired,
 	mgr: PropTypes.string.isRequired,
-	id: PropTypes.string.isRequired
+	id: PropTypes.string.isRequired,
+	pagerPay: PropTypes.string.isRequired
 };
 
 export default CalBuilder;

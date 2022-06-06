@@ -96,6 +96,7 @@ class AltdayBody extends React.Component {
 											email={this.props.email}
 											mgr={this.props.mgr}
 											id={this.props.id}
+											pagerPay={this.state.pagerPay}
 										/>}
 								</form>
 							</td>
