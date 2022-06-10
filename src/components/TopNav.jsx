@@ -95,12 +95,14 @@ class TopNav extends Component {
 			  </Navbar.Header>
 			  <Navbar.Collapse>
 			  	<Nav>
-				    <NavDropdown eventKey={3} title="Schedules" id="basic-nav-dropdown">
+				    <NavDropdown eventKey={3} title="US Schedules" id="basic-nav-dropdown">
 				      <MenuItem eventKey={3.1} onSelect={this.props.changeProd}>ASE</MenuItem>
 				      <MenuItem eventKey={3.2} onSelect={this.props.changeProd}>IQ</MenuItem>
 				      <MenuItem eventKey={3.3} onSelect={this.props.changeProd}>REP</MenuItem>
-				      <MenuItem eventKey={3.4} onSelect={this.props.changeProd}>Brazil</MenuItem>
 				    </NavDropdown>
+				    <NavItem eventKey={3.4} onSelect={this.props.changeProd}>Brazil Schedule
+				    	
+				    </NavItem>
 				    <NavItem eventKey={2} href="https://scpaci.bss.net.sap:8443/sap(bD1lbiZjPTEwMA==)/bc/bsp/sap/z_wend_schedule/myschedule.htm">
 				      The Tool
 				    </NavItem>
